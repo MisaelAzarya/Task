@@ -1,0 +1,11 @@
+.selector-for-some-widget {
+  box-sizing: content-box;
+}
+
+.thumbnail img{
+  max-height: 200px;
+}
+
+.price{
+  font-weight: bold;
+}

@@ -38,15 +38,21 @@ router.get('/add-to-cart/:id', function(req, res, next){
 });
 
 // untuk masukkan id barang untuk view product detail
-/*router.get('/xxx/:id', function(req, res, next){
+router.get('/product-detail/:id', function(req, res, next){
   var productId = req.params.id;
   // untuk cari produk berdasarkan id nya
   Product.findById(productId, function(err, product){
     if(err){
       return res.redirect('/');
     }
-    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
+    //console.log(req.session.cart);
+    res.render('shop/product-detail',{product_name:product.title, desc:product.description, img:product.imagePath, price:product.price});
   });
+});
+
+/*router.get('/product-detail', function(req, res, next) {
+   console.log('Hai');
+    res.render('shop/product-detail');
 });*/
 
 // untuk reduceByOne function
@@ -108,9 +114,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
   });
 });
 
-router.get('/product-detail', function(req, res, next) {
-    res.render('shop/product-detail');
-});
+
 
 module.exports = router;
 

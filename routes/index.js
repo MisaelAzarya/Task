@@ -27,7 +27,7 @@ router.get('/add-to-cart/:id', function(req, res, next){
   // untuk cari produk berdasarkan id nya
   Product.findById(productId, function(err, product){
     if(err){
-      return res.redirect('/');    
+      return res.redirect('/');
     }
     cart.add(product, product.id);
     // untuk store data cart ke session
@@ -36,6 +36,18 @@ router.get('/add-to-cart/:id', function(req, res, next){
     res.redirect('/');
   });
 });
+
+// untuk masukkan id barang untuk view product detail
+/*router.get('/xxx/:id', function(req, res, next){
+  var productId = req.params.id;
+  // untuk cari produk berdasarkan id nya
+  Product.findById(productId, function(err, product){
+    if(err){
+      return res.redirect('/');
+    }
+    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
+  });
+});*/
 
 // untuk reduceByOne function
 router.get('/reduce/:id', function(req, res, next){
@@ -94,6 +106,10 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
     req.session.cart = null;
     res.redirect('/');
   });
+});
+
+router.get('/product-detail', function(req, res, next) {
+    res.render('shop/product-detail');
 });
 
 module.exports = router;

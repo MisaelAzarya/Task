@@ -20,13 +20,13 @@
               <h4><strong>Price: Rp{{price}}</strong></h4>
             </div>
             <div>
-              <form class="form-inline">
+              <form class="form-inline" action="#"  method="post">
                 <div class="span5">
-                  <input type="number" placeholder="1" style="width:50px;height:30px; text-align:center;"></input>
+                  <input type="number" placeholder="1" style="width:50px;height:30px; text-align:center;" name="_csrf" value="{{ csrfToken }}">
                 </div>
                 <div class="span5">
                   <br>
-                  <button class="btn btn-info" type="submit">Add to cart</button>
+                  <a href="/add-to-cart2/{{_id}}" class="btn btn-info" role="button">Add to Cart</a>
                 </div>
               </form>
             </div>

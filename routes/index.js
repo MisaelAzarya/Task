@@ -23,7 +23,6 @@ router.get('/', function(req, res, next) {
 router.get('/add-to-cart/:id', function(req, res, next){
   var productId = req.params.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
-
   // untuk cari produk berdasarkan id nya
   Product.findById(productId, function(err, product){
     if(err){
@@ -41,12 +40,20 @@ router.get('/add-to-cart/:id', function(req, res, next){
 router.get('/product-detail/:id', function(req, res, next){
   var productId = req.params.id;
   // untuk cari produk berdasarkan id nya
+  var productChunks = [];
+
+  Product.find(function(err, docs){
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+  });
   Product.findById(productId, function(err, product){
     if(err){
       return res.redirect('/');
     }
     //console.log(req.session.cart);
-    res.render('shop/product-detail',{product_name:product.title, desc:product.description, img:product.imagePath, price:product.price});
+    res.render('shop/product-detail',{product_name:product.title, desc:product.description, img:product.imagePath, price:product.price, products:productChunks});
   });
 });
 

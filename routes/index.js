@@ -97,14 +97,6 @@ router.get('/product-detail/:id', function(req, res, next){
   });
 });
 
-<<<<<<< HEAD
-/*router.get('/product-detail', function(req, res, next) {
-   console.log('Hai');
-    res.render('shop/product-detail');
-});*/
-
-=======
->>>>>>> 3c81c72e069199fc73a6cedd62e9487e7223e6ec
 // untuk reduceByOne function
 router.get('/reduce/:id', function(req, res, next){
   var productId = req.params.id;

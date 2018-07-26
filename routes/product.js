@@ -4,6 +4,7 @@ var multer = require('multer');
 
 var Coba = require('../models/coba');
 var Product = require('../models/products');
+var Brand = require('../models/brand');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -25,27 +26,38 @@ var fileFilter = function(req, file, cb){
 var upload = multer({ storage: storage }).single('productImage');
 
 router.get('/inputBarang', function (req, res, next){
-    res.render('shop/inputBarang');
+    var messages = req.flash('error')[0];
+    Brand.find(function(err, brands){
+        res.render('admin/inputBarang', {brands: brands, messages:messages, hasErrors: !messages});
+      });
+
 });
 
 router.post('/inputBarang', function (req, res) {
     upload(req, res, function (err) {
         if (err){
-            res.redirect('/checkout');
+            req.flash('error', 'Failed to Upload Image Product!');
+            res.redirect('/inputBarang');
         }
 
         // Everything went fine
-        var tbhBarang = new Product({
+        var addProduct = new Product({
             imagePath: req.file.path,
             title: req.body.namaBrg,
-            description: "Apa aja boleh deh",
-            price: 50
+            description: req.body.desc,
+            price: req.body.price,
+            color: req.body.color,
+            brand: req.body.brand,
+            stock: req.body.stock,
+            size: req.body.size,
+            gender: req.body.gender
         });
-        tbhBarang.save(function(err, result){
+        addProduct.save(function(err, result){
             if(err){
-                res.redirect('/checkout');
+                req.flash('error', 'Something Wrong When Add new Product');
+                res.redirect('/inputBarang');
               }
-              req.flash('success', 'Successfully Tambah Product!');
+              req.flash('success', 'Successfully Add New Product!');
               res.redirect('/');
         });
 
@@ -66,8 +78,6 @@ router.post('/inputBarang', function (req, res) {
         // });
 
     })
-
-
 })
 
 

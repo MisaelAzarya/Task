@@ -20,13 +20,16 @@
               <h4><strong>Price: Rp{{price}}</strong></h4>
             </div>
             <div>
-              <form class="form-inline" action="#"  method="post">
+              <form class="form-inline" action="/product-detail/"  method="post">
                 <div class="span5">
-                  <input type="number" placeholder="1" style="width:50px;height:30px; text-align:center;" name="_csrf" value="{{ csrfToken }}">
+                    <input type="hidden" name="id" value="{{_id}}">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                  <input type="number" placeholder="1" style="width:50px;height:30px; text-align:center;" name="qty">
                 </div>
                 <div class="span5">
                   <br>
-                  <a href="/add-to-cart2/{{_id}}" class="btn btn-info" role="button">Add to Cart</a>
+                  {{!-- <a href="/add-to-cart2/{{_id}}" class="btn btn-info" role="button">Add to Cart</a> --}}
+                    <button class="btn btn-info" type="submit">Add to Cart</button>
                 </div>
               </form>
             </div>
@@ -99,7 +102,7 @@
                     <li class="span3">
                       <div class="product-box">
                         <span class="sale_tag"></span>
-                        <a href="product_detail.html"><img alt="" src="{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
+                        <a href="product_detail.html"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
                         <a href="product_detail.html" class="title">{{this.title}}</a><br/>
                         <a href="#" class="category">Suspendisse aliquet</a>
                         <p class="price">Rp{{this.price}}</p>
@@ -118,7 +121,7 @@
                     <li class="span3">
                       <div class="product-box">
                         <span class="sale_tag"></span>
-                        <a href="product_detail.html"><img alt="" src="{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
+                        <a href="product_detail.html"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
                         <a href="product_detail.html" class="title">{{this.title}}</a><br/>
                         <a href="#" class="category">Suspendisse aliquet</a>
                         <p class="price">Rp{{this.price}}</p>
@@ -134,3 +137,5 @@
   </div>
   </section>
 </div>
+
+<!-- src="../..{{img}}" !-->

@@ -28,11 +28,10 @@ router.get('/', function(req, res, next) {
 router.get('/add-to-cart/:id', function(req, res, next){
   var productId = req.params.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
-
   // untuk cari produk berdasarkan id nya
   Product.findById(productId, function(err, product){
     if(err){
-      return res.redirect('/');    
+      return res.redirect('/');
     }
     cart.add(product, product.id);
     // untuk store data cart ke session
@@ -148,6 +147,8 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
     res.redirect('/');
   });
 });
+
+
 
 module.exports = router;
 

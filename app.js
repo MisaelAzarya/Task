@@ -13,6 +13,7 @@ var MongoStore = require('connect-mongo')(session);
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
+var productRouter = require('./routes/product');
 
 var app = express();
 
@@ -36,8 +37,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
 app.use(session({
-  secret: "mysupersecret", 
-  resave: false, 
+  secret: "mysupersecret",
+  resave: false,
   saveUninitialized: false,
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
   // ini untuk cookie selama 3 jam
@@ -54,6 +55,7 @@ app.use(function(req, res, next){
   next();
 });
 
+app.use('/product',productRouter);
 app.use('/user', userRouter);
 app.use('/', indexRouter);
 

@@ -1,14 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var csrf = require('csurf');
 
 var Cart = require('../models/cart');
 var Product = require('../models/products');
 var Order = require('../models/order');
-
-var csrfProtection = csrf();
-router.use(csrfProtection);
-
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

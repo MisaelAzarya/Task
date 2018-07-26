@@ -28,7 +28,6 @@ router.get('/profile', isLoggedIn,function(req, res, next){
 
 //get admin page
 router.get('/admin', function(req, res, next){
-
   Order.find(function(err, orders){
     if(err){
       return res.write('Error!');
@@ -56,7 +55,6 @@ router.get('/admin', function(req, res, next){
       //res.render('user/admin',{products: productChunks,orders: orders});
     });
   });
-
 
 });
 

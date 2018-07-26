@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
-
+var User = require('../models/user');
 var Coba = require('../models/coba');
 var Product = require('../models/products');
+var Order = require('../models/order');
 var Brand = require('../models/brand');
 
 var storage = multer.diskStorage({
@@ -79,6 +80,42 @@ router.post('/inputBarang', function (req, res) {
 
     })
 })
+
+router.get('/delete/:id', function (req, res, next){
+  Product.findByIdAndRemove(req.params.id,function(err, product){
+    Order.find(function(err, orders){
+      if(err){
+        return res.write('Error!');
+      }
+      var cart;
+      orders.forEach(function(order){
+        cart = new Cart(order.cart);
+        order.items = cart.generateArray();
+      });
+
+        Product.find(function(err, docs){
+          var productChunks = [];
+          var chunkSize = 3;
+          for (var i = 0; i < docs.length; i+= chunkSize) {
+            productChunks.push(docs.slice(i, i+ chunkSize));
+          }
+              User.find(function(err, docs){
+                var userChunks = [];
+                var chunkSize = 3;
+                for (var i = 0; i < docs.length; i+= chunkSize) {
+                  userChunks.push(docs.slice(i, i+ chunkSize));
+                }
+              res.render('user/admin',{products: productChunks, orders: orders, users:userChunks});
+            });
+        //res.render('user/admin',{products: productChunks,orders: orders});
+      });
+    });
+  // As always, handle any potential errors:
+  //if (err) return res.render('/user/admin');
+  // We'll create a simple object to send back with a message and the id of the document that was removed
+  // You can really do this however you want, though.
+  });
+});
 
 
 module.exports = router;

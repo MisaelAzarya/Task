@@ -126,6 +126,10 @@ router.get('/shopping-cart', function(req, res, next){
   res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
 });
 
+router.get('/contactus', function(req, res, next){
+  res.render('shop/contactus');
+});
+
 // parse data ke checkout
 router.get('/checkout', isLoggedIn, function(req, res, next){
   if(!req.session.cart){

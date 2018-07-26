@@ -13,6 +13,7 @@ var MongoStore = require('connect-mongo')(session);
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
+var productRouter = require('./routes/product');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.set('view engine', '.hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 app.use(express.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
@@ -54,6 +56,7 @@ app.use(function(req, res, next){
   next();
 });
 
+app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/', indexRouter);
 

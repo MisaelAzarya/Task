@@ -1,8 +1,13 @@
 var express = require('express');
 var router = express.Router();
+var csrf = require('csurf');
+
 var Cart = require('../models/cart');
 var Product = require('../models/products');
 var Order = require('../models/order');
+
+var csrfProtection = csrf();
+router.use(csrfProtection);
 
 
 /* GET home page. */
@@ -83,11 +88,6 @@ router.get('/product-detail/:id', function(req, res, next){
   });
 });
 
-/*router.get('/product-detail', function(req, res, next) {
-   console.log('Hai');
-    res.render('shop/product-detail');
-});*/
-
 // untuk reduceByOne function
 router.get('/reduce/:id', function(req, res, next){
   var productId = req.params.id;
@@ -108,6 +108,7 @@ router.get('/remove/:id', function(req, res, next){
   res.redirect('/shopping-cart');
 });
 
+// parse data ke shopping cart
 router.get('/shopping-cart', function(req, res, next){
   if(!req.session.cart){
     return res.render('shop/shopping-cart', {products: null});
@@ -116,7 +117,7 @@ router.get('/shopping-cart', function(req, res, next){
   res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
 });
 
-
+// parse data ke checkout
 router.get('/checkout', isLoggedIn, function(req, res, next){
   if(!req.session.cart){
     return res.redirect('/shopping-cart');
@@ -132,10 +133,10 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
   }
   var cart = new Cart(req.session.cart);
   var order = new Order({
-    user: req.user,
-    cart: cart,
-    address: req.body.address,
-    name: req.body.name
+    user: req.user, // data user
+    cart: cart, // data cart
+    address: req.body.address, // ambil address dari form body
+    name: req.body.name // ambil name dari form body
   });
   order.save(function(err, result){
     if(err){

@@ -27,3 +27,36 @@
     </div>
 </div>
 </div>
+
+
+<div class="container" style="background-color:white;">
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h2>History</h2>
+        {{#each orders}}
+            <div class="panel panel-default">
+                <div class="panel-footer clearfix">
+                    <ul class="list-group"></ul>
+                   <li class="list-group-item">
+                                Name : {{this.name}} | Address :{{this.address}}
+                    </li>
+                    {{#each this.items}}
+                            <li class="list-group-item">
+                                <span class="badge">${{this.price}}</span>
+                                {{this.item.title}} | {{this.qty}} Units
+                            </li>
+                        {{/each}}
+                    </ul>
+                     <div class="panel-footer clearfix">
+                    <div class="pull-right">
+                        <strong>Total Price: ${{this.cart.totalPrice}}</strong>
+                    </div>
+                </div>
+                </div>
+            </div>
+        {{/each}}
+
+    </div>
+</div>
+</div>
+

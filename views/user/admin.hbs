@@ -1,0 +1,98 @@
+<div class="container" style="background-color:white;">
+
+  <section class="header_text">
+    <h2><span>Admin Page</span></h2>
+  </section>
+
+<section class="main-content">
+<div class="row">
+    <div class="span11">
+      <a href="/add-to-cart/{{this._id}}" class="btn btn-info pull-right" role="button">Add new Item</a>
+      <ul class="nav nav-tabs" id="myTab">
+        <li class="active"><a href="#home">Transation List</a></li>
+        <li class=""><a href="#products">Product List</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="home">
+            <table class="table table-striped shop_attributes">
+              <thead>
+                <th>Id Transaction</th>
+                <td>Nama User</td>
+                <td>List Barang</td>
+              </thead>
+              <tbody>
+              {{#each orders}}
+                    <tr class="">
+                      <th>
+                          <h4>{{this._id}}</h4>
+                      </th>
+
+                      <td>
+                        <h4>{{this.name}}</h4>
+                      </td>
+
+                      <td>
+                        <ul class="list-group">
+                            {{#each this.items}}
+                                <li class="list-group-item">
+                                    <span class="badge">${{this.price}}</span>
+                                    {{this.item.title}} | {{this.qty}} Units
+                                </li>
+                            {{/each}}
+                        </ul>
+                      </td>
+                    </tr>
+                {{/each}}
+              </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane" id="products">
+          <table class="table table-striped shop_attributes">
+            <thead>
+              <th></th>
+              <td>Informasi</td>
+              <td>Deskripsi</td>
+              <td>Action</td>
+            </thead>
+            <tbody>
+              {{# each products }}
+                  {{# each this}}
+                  <tr class="">
+                    <th>
+                      <div class="product-box thumbnail img-thumbnail">
+                        <img class="img-responsive rounded mx-auto d-block" src="{{this.imagePath}}">
+                      </div>
+                    </th>
+                    <td>
+                        <h4>{{this.title}}</h4>
+                        <h3>Rp{{this.price}}</h3>
+                        <form>
+                          <input type=number value="{{this.__v}}">
+                          <button type=submit>Tes</button>
+                        </form>
+                    </td>
+                    <td>
+                        <p>{{this.description}}</p>
+                    </td>
+                    <td>
+                        <div class="btn-group-vertical">
+                          <a href="/add-to-cart/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">Update</a>
+                          <a href="/add-to-cart/{{this._id}}" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
+                        </div>
+
+                    </td>
+                  </tr>
+                  {{/each}}
+            {{/each}}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<br><br>
+</div>
+</section>

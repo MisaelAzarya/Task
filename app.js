@@ -56,11 +56,7 @@ app.use(function(req, res, next){
   next();
 });
 
-<<<<<<< HEAD
-app.use('/product',productRouter);
-=======
 app.use('/product', productRouter);
->>>>>>> 3c81c72e069199fc73a6cedd62e9487e7223e6ec
 app.use('/user', userRouter);
 app.use('/', indexRouter);
 

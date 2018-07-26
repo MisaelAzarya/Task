@@ -5,6 +5,7 @@ var passport = require('passport');
 var Product = require('../models/products');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
+var User = require('../models/user');
 
 var csrfProtection = csrf();
 router.use(csrfProtection);
@@ -37,13 +38,22 @@ router.get('/admin', function(req, res, next){
       cart = new Cart(order.cart);
       order.items = cart.generateArray();
     });
+
       Product.find(function(err, docs){
         var productChunks = [];
         var chunkSize = 3;
         for (var i = 0; i < docs.length; i+= chunkSize) {
           productChunks.push(docs.slice(i, i+ chunkSize));
         }
-      res.render('user/admin',{products: productChunks,orders: orders});
+            User.find(function(err, docs){
+              var userChunks = [];
+              var chunkSize = 3;
+              for (var i = 0; i < docs.length; i+= chunkSize) {
+                userChunks.push(docs.slice(i, i+ chunkSize));
+              }
+            res.render('user/admin',{products: productChunks, orders: orders, users:userChunks});
+          });
+      //res.render('user/admin',{products: productChunks,orders: orders});
     });
   });
 

@@ -95,6 +95,28 @@
         </div>
 
         <div class="tab-pane" id="users">
+          <table class="table table-striped shop_attributes">
+            <thead>
+              <th>Id User</th>
+              <td>Email</td>
+            </thead>
+            <tbody>
+            {{#each users}}
+              {{# each this}}
+                  <tr class="">
+                    <th>
+                        <h4>{{this._id}}</h4>
+                    </th>
+
+                    <td>
+                      <h4>{{this.email}}</h4>
+                    </td>
+
+                  </tr>
+                  {{/each}}
+              {{/each}}
+            </tbody>
+          </table>
         </div>
 
       </div>

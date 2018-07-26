@@ -21,11 +21,7 @@ var fileFilter = function(req, file, cb){
       cb(null, false);
     }
 };
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 3c81c72e069199fc73a6cedd62e9487e7223e6ec
 var upload = multer({ storage: storage }).single('productImage');
 
 router.get('/inputBarang', function (req, res, next){
@@ -37,11 +33,7 @@ router.post('/inputBarang', function (req, res) {
         if (err){
             res.redirect('/checkout');
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 3c81c72e069199fc73a6cedd62e9487e7223e6ec
         // Everything went fine
         var tbhBarang = new Product({
             imagePath: req.file.path,
@@ -72,7 +64,6 @@ router.post('/inputBarang', function (req, res) {
         //     req.flash('success', 'Successfully Tambah Product!');
         //     res.redirect('/');
         // });
-<<<<<<< HEAD
 
     })
 
@@ -81,13 +72,3 @@ router.post('/inputBarang', function (req, res) {
 
 
 module.exports = router;
-=======
-        
-    })
-    
-  
-})
-
-
-module.exports = router;
->>>>>>> 3c81c72e069199fc73a6cedd62e9487e7223e6ec

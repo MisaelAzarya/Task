@@ -5,6 +5,7 @@ var passport = require('passport');
 
 var Order = require('../models/order');
 var Cart = require('../models/cart');
+var User = require('../models/user');
 
 var csrfProtection = csrf();
 router.use(csrfProtection);
@@ -24,6 +25,19 @@ router.get('/profile', isLoggedIn,function(req, res, next){
     res.render('user/profile', {orders: orders});
   });
 });
+
+
+router.get('/userList', isLoggedIn,function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+  User.find( function(err, users){
+    if(err){
+      return res.write('Error!');
+    }
+    res.render('admin/userList', {users: users});
+  });
+});
+
+
 
 router.get('/logout', isLoggedIn, function(req, res, next){
   req.logout();

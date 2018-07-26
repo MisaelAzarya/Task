@@ -28,6 +28,11 @@ router.get('/inputBarang', function (req, res, next){
     res.render('shop/inputBarang');
 });
 
+
+router.get('/userList', function (req, res, next){
+    res.render('shop/userList');
+});
+
 router.post('/inputBarang', function (req, res) {
     upload(req, res, function (err) {
         if (err){

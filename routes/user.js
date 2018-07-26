@@ -100,6 +100,7 @@ router.post('/signin', passport.authenticate('local.signin', {
   failureFlash: true
 }), function(req, res, next){
   if (req.session.oldUrl){ // ketika belum login, tp mau checkout maka setelah signup akan diarahkan kembali ke menu checkout
+    console.log(req.csrfToken);
     var oldUrl = req.session.oldUrl;
     req.session.oldUrl = null;
     res.redirect(oldUrl);

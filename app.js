@@ -33,6 +33,7 @@ app.set('view engine', '.hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 app.use(express.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
@@ -55,7 +56,11 @@ app.use(function(req, res, next){
   next();
 });
 
+<<<<<<< HEAD
 app.use('/product',productRouter);
+=======
+app.use('/product', productRouter);
+>>>>>>> 3c81c72e069199fc73a6cedd62e9487e7223e6ec
 app.use('/user', userRouter);
 app.use('/', indexRouter);
 

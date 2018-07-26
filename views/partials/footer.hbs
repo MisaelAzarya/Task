@@ -27,17 +27,14 @@
           <li><a href="./">Homepage</a></li>
           <li><a href="./">About Us</a></li>
           <li><a href="./">Contact Us</a></li>
-          <li><a href="/shopping-cart/">Your Cart</a></li>
-          <li><a href="/user/signin">Login</a></li>
         </ul>
       </div>
       <div class="span4">
         <h4>My Account</h4>
         <ul class="nav">
-          <li><a href="#">My Account</a></li>
-          <li><a href="#">Order History</a></li>
-          <li><a href="#">Wish List</a></li>
-          <li><a href="#">Newsletter</a></li>
+          <li><a {{# if login}} href="/user/Profile" {{else}} href="/user/signin" {{/if}}>My Account</a></li>
+          <li><a {{# if login}} href="/user/Profile" {{else}} href="/user/signin" {{/if}}>Order History</a></li>
+          <li><a {{# if login}} href="/shopping-cart/" {{else}} href="/user/signin" {{/if}}>Cart</a></li>
         </ul>
       </div>
     </div>

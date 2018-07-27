@@ -19,6 +19,16 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/manwoman', function(req, res, next) {
+  Product.find(function(err, docs){
+    var productChunks = [];
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+    res.render('shop/manwoman', { title: 'Shopping Cart', products: productChunks});
+  });
+});
 //get page with woman category
 /*router.get('/index/:id', function(req, res, next) {
   var successMsg = req.flash('success')[0];
@@ -89,12 +99,12 @@ router.get('/product-detail/:id', function(req, res, next){
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
   });
-  Product.findById(productId, function(err, product){
+  Product.findById(productId,function(err, product){
     if(err){
       return res.redirect('/');
     }
     //console.log(req.session.cart);
-    res.render('shop/product-detail',{_id:product._id,product_name:product.title, desc:product.description, img:product.imagePath, price:product.price, products:productChunks});
+    res.render('shop/product-detail',{_id:product._id,product_name:product.title, desc:product.description, img:product.imagePath, price:product.price,brand:product.brand,stock:product.stock,gender:product.gender,size:product.size, products:productChunks});
   });
 });
 

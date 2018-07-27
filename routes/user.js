@@ -10,7 +10,7 @@ var User = require('../models/user');
 var csrfProtection = csrf();
 router.use(csrfProtection);
 
-// ketika terima user/profile dari successRedirect
+
 router.get('/profile', isLoggedIn,function(req, res, next){
   // untuk ambil data order berdasarkan user id
   Order.find({user: req.user}, function(err, orders){
@@ -23,6 +23,31 @@ router.get('/profile', isLoggedIn,function(req, res, next){
       order.items = cart.generateArray();
     });
     res.render('user/profile', {orders: orders});
+  });
+});
+
+
+
+router.get('/transaction', isLoggedIn,function(req, res, next){
+    res.render('user/transaction');
+  });
+
+
+
+
+// ketika terima user/profile dari successRedirect
+router.get('/history', isLoggedIn,function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+  Order.find({user: req.user}, function(err, orders){
+    if(err){
+      return res.write('Error!');
+    }
+    var cart;
+    orders.forEach(function(order){
+      cart = new Cart(order.cart);
+      order.items = cart.generateArray();
+    });
+    res.render('user/history', {orders: orders});
   });
 });
 

@@ -1,4 +1,4 @@
-<div class="container" style="background-color:white;">
+<div class="container" style="background-color:white;margin-top:-20px;">
   <div class="row">
     <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
       <div id="success" class="alert alert-success {{#if noMessage}}hidden{{/if}}">
@@ -40,9 +40,7 @@
             <p>{{this.description}}</p>
             <div class="clearfix">
               <div class="price pull-left">Rp{{this.price}}</div>
-              <a href="/delete/{{this._id}}" class="btn btn-danger" role="button">Delete</a>
               <a href="/add-to-cart/{{this._id}}" class="btn btn-info pull-right" role="button">Buy</a>
-
             </div>
           </div>
         </div>

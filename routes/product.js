@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
-
-var Coba = require('../models/coba');
+var User = require('../models/user');
 var Product = require('../models/products');
+var Order = require('../models/order');
 var Brand = require('../models/brand');
 
 var storage = multer.diskStorage({
@@ -22,15 +22,15 @@ var fileFilter = function(req, file, cb){
       cb(null, false);
     }
 };
-  
+
 var upload = multer({ storage: storage }).single('productImage');
 
 router.get('/inputBarang', function (req, res, next){
     var messages = req.flash('error')[0];
     Brand.find(function(err, brands){
-        res.render('admin/inputBarang', {brands: brands, messages:messages, hasErrors: !messages});
+        res.render('admins/inputBarang', {brands: brands, messages:messages, hasErrors: !messages});
       });
-    
+
 });
 
 router.post('/inputBarang', function (req, res) {
@@ -39,7 +39,7 @@ router.post('/inputBarang', function (req, res) {
             req.flash('error', 'Failed to Upload Image Product!');
             res.redirect('/inputBarang');
         }
-        
+
         // Everything went fine
         var addProduct = new Product({
             imagePath: req.file.path,
@@ -61,7 +61,31 @@ router.post('/inputBarang', function (req, res) {
               res.redirect('/');
         });
     })
-})
+});
 
+// untuk delete data product
+router.get('/delete/:id', function (req, res, next){
+  Product.findByIdAndRemove(req.params.id,function(err, product){
+    res.redirect('/user/admin');
+  });
+});
+
+// untuk update data product
+router.post('/update', function(req, res, next){
+    var id = req.body.id;
+    Product.findOne({_id: id}, function(err, foundObject){
+        if (err){
+            res.status(500).send();
+        }
+        foundObject.stock = parseInt(foundObject.stock) + parseInt(req.body.qty);
+
+        foundObject.save(function(err, updatedObject){
+            if (err){
+                res.status(500).send();
+            }
+            res.redirect('/user/admin');
+        });
+    });
+});
 
 module.exports = router;

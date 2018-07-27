@@ -38,8 +38,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
 app.use(session({
-  secret: "mysupersecret", 
-  resave: false, 
+  secret: "mysupersecret",
+  resave: false,
   saveUninitialized: false,
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
   // ini untuk cookie selama 3 jam

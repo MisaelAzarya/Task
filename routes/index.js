@@ -19,6 +19,20 @@ router.get('/', function(req, res, next) {
   });
 });
 
+//get page with woman category
+/*router.get('/index/:id', function(req, res, next) {
+  var successMsg = req.flash('success')[0];
+  // ambil data dari products
+  Product.find(function(err, docs){
+    var productChunks = [];
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
+  });
+});*/
+
 // untuk masukkan id barang ke cart
 router.get('/add-to-cart/:id', function(req, res, next){
   var productId = req.params.id;
@@ -139,6 +153,10 @@ router.get('/shopping-cart', function(req, res, next){
   res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
 });
 
+router.get('/contactus', function(req, res, next){
+  res.render('shop/contactus');
+});
+
 // parse data ke checkout
 router.get('/checkout', isLoggedIn, function(req, res, next){
   if(!req.session.cart){
@@ -169,14 +187,6 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
     res.redirect('/');
   });
 });
-
-// untuk delete data
-router.get('/delete/:id', function(req, res, next){
-  Product.remove({_id:req.params.id}, function(err, delData){
-    res.redirect("/");
-  });
-});
-
 
 
 module.exports = router;

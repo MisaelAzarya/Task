@@ -60,23 +60,6 @@ router.post('/inputBarang', function (req, res) {
               req.flash('success', 'Successfully Add New Product!');
               res.redirect('/');
         });
-
-        // var inputBarang = new Coba({
-        //     name: req.body.namaBrg,
-        //     stock: req.body.stock,
-        //     gender: req.body.gender,
-        //     ukuran: req.body.size,
-        //     brand: req.body.brand,
-        //     productImage: req.file.path
-        // });
-        // inputBarang.save(function(err, result){
-        //     if(err){
-        //       res.redirect('/checkout');
-        //     }
-        //     req.flash('success', 'Successfully Tambah Product!');
-        //     res.redirect('/');
-        // });
-        
     })
 })
 

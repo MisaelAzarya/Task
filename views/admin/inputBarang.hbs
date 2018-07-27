@@ -9,7 +9,7 @@
             <form action="/product/inputBarang" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="email">Nama Barang</label>
-                    <input type="text" id="namaBrg" name="namaBrg" class="form-control">
+                    <input type="text" id="namaBrg" name="namaBrg" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label>Brand</label>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="form-group">
                     <label for="color">Color</label>
-                    <input type="text" name="color" id="color" class="form-control">
+                    <input type="text" name="color" id="color" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="desc">Description</label>
@@ -29,11 +29,11 @@
                 </div>
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="number" name="price" class="form-control">
+                    <input type="number" name="price" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="pass">Stock</label>
-                    <input type="number" id="stock" name="stock" class="form-control">
+                    <input type="number" id="stock" name="stock" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label>Gender</label><br>
@@ -80,7 +80,7 @@
                     <br>
                 </div>
                 <div class="form-group">
-                    <input type="file" name="productImage" accept="image/*">
+                    <input type="file" name="productImage" accept="image/*" required>
                 </div>
                 <button type="submit" class="btn btn-primary pull-right">Add New Product</button>
             </form>

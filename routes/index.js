@@ -170,6 +170,13 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
   });
 });
 
+// untuk delete data
+router.get('/delete/:id', function(req, res, next){
+  Product.remove({_id:req.params.id}, function(err, delData){
+    res.redirect("/");
+  });
+});
+
 
 
 module.exports = router;

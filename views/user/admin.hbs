@@ -17,8 +17,8 @@
           <table class="table table-striped shop_attributes">
             <thead>
               <th><a href="/product/inputBarang" class="btn btn-info" role="button">Add new Item</a></th>
-              <td>Informasi</td>
-              <td>Deskripsi</td>
+              <td>Product Detail</td>
+              <td>Size List</td>
               <td>Action</td>
             </thead>
             <tbody>
@@ -27,24 +27,29 @@
                   <tr class="">
                     <th>
                       <div class="product-box thumbnail img-thumbnail">
-                        <img class="img-responsive rounded mx-auto d-block" src="{{this.imagePath}}">
+                        <img class="img-responsive rounded mx-auto d-block" src="/../../{{this.imagePath}}">
                       </div>
                     </th>
                     <td>
-                        <h4>{{this.title}}</h4>
-                        <h3>Rp{{this.price}}</h3>
+                        <h4 style="color:#eb4700;">{{this.title}}</h4>
+                        <h5>Rp{{this.price}}</h5>
+                        <p>{{this.description}}</p>
                         <form>
-                          <input type=number value="{{this.__v}}">
+                          <input type=number value="{{this.stock}}">
                           <button type=submit>Edit Stocks</button>
                         </form>
                     </td>
                     <td>
-                        <p>{{this.description}}</p>
+                      <ul style="list-style:none;">
+                        {{#each this.size}}
+                          <li><h4>{{this}}</h4></li>
+                        {{/each}}
+                      </ul>
                     </td>
                     <td>
                         <div class="btn-group-vertical">
-                          <a href="/product/delete/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">Update</a>
-                          <a href="/add-to-cart/{{this._id}}" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
+                          <a href="/add-to-cart/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">Update</a>
+                          <a href="/product/delete/{{this._id}}" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
                         </div>
 
                     </td>
@@ -72,6 +77,7 @@
 
                       <td>
                         <h4>{{this.name}}</h4>
+                        <h5>{{this.address}}</h5>
                       </td>
 
                       <td>

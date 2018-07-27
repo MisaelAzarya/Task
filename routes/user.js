@@ -39,6 +39,21 @@ router.get('/transaction', isLoggedIn,function(req, res, next){
 router.get('/history', isLoggedIn,function(req, res, next){
   // untuk ambil data order berdasarkan user id
   Order.find({user: req.user}, function(err, orders){
+router.get('/profile/:id',function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+  Order.find({user:req.params.id}, function(err, orders){
+    if(err){
+      return res.write('Error!');
+    }
+    var cart;
+    orders.forEach(function(order){
+      cart = new Cart(order.cart);
+      order.items = cart.generateArray();
+    });
+    res.render('user/profile', {orders: orders});
+  });
+});
+
 //get admin page
 router.get('/admin', function(req, res, next){
   Order.find(function(err, orders){

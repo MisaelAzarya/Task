@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-
 var Cart = require('../models/cart');
 var Product = require('../models/products');
 var Order = require('../models/order');
-
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -20,6 +18,20 @@ router.get('/', function(req, res, next) {
     res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
   });
 });
+
+//get page with woman category
+/*router.get('/index/:id', function(req, res, next) {
+  var successMsg = req.flash('success')[0];
+  // ambil data dari products
+  Product.find(function(err, docs){
+    var productChunks = [];
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
+  });
+});*/
 
 // untuk masukkan id barang ke cart
 router.get('/add-to-cart/:id', function(req, res, next){
@@ -38,8 +50,8 @@ router.get('/add-to-cart/:id', function(req, res, next){
   });
 });
 
-router.get('/add-to-cart2/:id', function(req, res, next){
-  var productId = req.params.id;
+router.post('/product-detail', function(req, res, next){
+  var productId = req.body.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
   var productChunks = [];
 
@@ -49,19 +61,20 @@ router.get('/add-to-cart2/:id', function(req, res, next){
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
   });
-  // untuk cari produk berdasarkan id nya
+
   Product.findById(productId, function(err, product){
     if(err){
       return res.redirect('/');
     }
     cart.add(product, product.id);
+    for (i=1;i<req.body.qty;i++){
+      cart.addQty(productId);
+    }
     // untuk store data cart ke session
     req.session.cart = cart;
     console.log(req.session.cart);
     res.render('shop/product-detail',{_id:product._id,product_name:product.title, desc:product.description, img:product.imagePath, price:product.price, products:productChunks});
   });
-  //var messages = req.flash('error');
-  //res.render('shop/product-detail', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0})
 });
 
 // untuk masukkan id barang untuk view product detail
@@ -114,6 +127,9 @@ router.get('/shopping-cart', function(req, res, next){
   res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
 });
 
+router.get('/contactus', function(req, res, next){
+  res.render('shop/contactus');
+});
 
 // parse data ke checkout
 router.get('/checkout', isLoggedIn, function(req, res, next){

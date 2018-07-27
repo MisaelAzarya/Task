@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var csrf = require('csurf');
 var passport = require('passport');
-
+var Product = require('../models/products');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 var User = require('../models/user');
@@ -39,6 +39,9 @@ router.get('/transaction', isLoggedIn,function(req, res, next){
 router.get('/history', isLoggedIn,function(req, res, next){
   // untuk ambil data order berdasarkan user id
   Order.find({user: req.user}, function(err, orders){
+//get admin page
+router.get('/admin', function(req, res, next){
+  Order.find(function(err, orders){
     if(err){
       return res.write('Error!');
     }
@@ -64,6 +67,26 @@ router.get('/userList', isLoggedIn,function(req, res, next){
 
 
 
+      Product.find(function(err, docs){
+        var productChunks = [];
+        var chunkSize = 3;
+        for (var i = 0; i < docs.length; i+= chunkSize) {
+          productChunks.push(docs.slice(i, i+ chunkSize));
+        }
+            User.find(function(err, docs){
+              var userChunks = [];
+              var chunkSize = 3;
+              for (var i = 0; i < docs.length; i+= chunkSize) {
+                userChunks.push(docs.slice(i, i+ chunkSize));
+              }
+            res.render('user/admin',{products: productChunks, orders: orders, users:userChunks});
+          });
+      //res.render('user/admin',{products: productChunks,orders: orders});
+    });
+  });
+
+});
+
 router.get('/logout', isLoggedIn, function(req, res, next){
   req.logout();
   res.redirect('/');
@@ -85,7 +108,7 @@ router.get('/signup', function(req, res, next){
 router.post('/signup', passport.authenticate('local.signup', {
   failureRedirect: '/user/signup',
   failureFlash: true
-}), function(req, res, next){ 
+}), function(req, res, next){
   if (req.session.oldUrl){ // ketika belum login, tp mau checkout maka setelah signup akan diarahkan kembali ke menu checkout
     var oldUrl = req.session.oldUrl;
     req.session.oldUrl = null;
@@ -104,8 +127,9 @@ router.get('/signin', function(req, res, next){
 router.post('/signin', passport.authenticate('local.signin', {
   failureRedirect: '/user/signin',
   failureFlash: true
-}), function(req, res, next){ 
+}), function(req, res, next){
   if (req.session.oldUrl){ // ketika belum login, tp mau checkout maka setelah signup akan diarahkan kembali ke menu checkout
+    console.log(req.csrfToken);
     var oldUrl = req.session.oldUrl;
     req.session.oldUrl = null;
     res.redirect(oldUrl);

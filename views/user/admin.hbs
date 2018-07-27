@@ -1,0 +1,134 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+
+  <section class="header_text">
+    <h2><span>Admin Control System</span></h2>
+  </section>
+
+<section class="main-content">
+<div class="row">
+    <div class="span11">
+      <ul class="nav nav-tabs" id="myTab">
+        <li class="active"><a data-toggle="tab" href="#products">Product List</a></li>
+        <li class=""><a data-toggle="tab" href="#transactions">Transaction List</a></li>
+        <li class=""><a data-toggle="tab" href="#users">User List</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="products">
+          <table class="table table-striped shop_attributes">
+            <thead>
+              <th><a href="/product/inputBarang" class="btn btn-info" role="button">Add new Item</a></th>
+              <td>Product Detail</td>
+              <td>Size List</td>
+              <td>Action</td>
+            </thead>
+            <tbody>
+              {{# each products }}
+                  {{# each this}}
+                  <tr class="">
+                    <th>
+                      <div class="product-box thumbnail img-thumbnail">
+                        <img class="img-responsive rounded mx-auto d-block" src="/../../{{this.imagePath}}">
+                      </div>
+                    </th>
+                    <td>
+                        <h4 style="color:#eb4700;">{{this.title}}</h4>
+                        <h5>Rp{{this.price}}</h5>
+                        <p>{{this.description}}</p>
+                        <form>
+                          <input type=number value="{{this.stock}}">
+                          <button type=submit>Edit Stocks</button>
+                        </form>
+                    </td>
+                    <td>
+                      <ul style="list-style:none;">
+                        {{#each this.size}}
+                          <li><h4>{{this}}</h4></li>
+                        {{/each}}
+                      </ul>
+                    </td>
+                    <td>
+                        <div class="btn-group-vertical">
+                          <a href="/add-to-cart/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">Update</a>
+                          <a href="/product/delete/{{this._id}}" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
+                        </div>
+
+                    </td>
+                  </tr>
+                  {{/each}}
+            {{/each}}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tab-pane" id="transactions">
+            <table class="table table-striped shop_attributes">
+              <thead>
+                <th>Id Transaction</th>
+                <td>Receiver Data</td>
+                <td>Order List</td>
+                <td>Order Status</td>
+                <td>Action</td>
+              </thead>
+              <tbody>
+              {{#each orders}}
+                    <tr class="">
+                      <th>
+                          <h4>{{this._id}}</h4>
+                      </th>
+
+                      <td>
+                        <h4>{{this.name}}</h4>
+                        <h5>{{this.address}}</h5>
+                      </td>
+
+                      <td>
+                        <ul class="list-group">
+                            {{#each this.items}}
+                                <li class="list-group-item">
+                                    <span class="badge">${{this.price}}</span>
+                                    {{this.item.title}} | {{this.qty}} Units
+                                </li>
+                            {{/each}}
+                        </ul>
+                      </td>
+
+                      <td>
+                        <h4>{{this.name}}</h4>
+                      </td>
+                    </tr>
+                {{/each}}
+              </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane" id="users">
+          <table class="table table-striped shop_attributes">
+            <thead>
+              <th>Id User</th>
+              <td>Email</td>
+            </thead>
+            <tbody>
+            {{#each users}}
+              {{# each this}}
+                  <tr class="">
+                    <th>
+                        <h4>{{this._id}}</h4>
+                    </th>
+
+                    <td>
+                      <h4>{{this.email}}</h4>
+                    </td>
+
+                  </tr>
+                  {{/each}}
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>

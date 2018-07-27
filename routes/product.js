@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
-
+var User = require('../models/user');
 var Coba = require('../models/coba');
 var Product = require('../models/products');
+var Order = require('../models/order');
+var Brand = require('../models/brand');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -21,11 +23,15 @@ var fileFilter = function(req, file, cb){
       cb(null, false);
     }
 };
-  
+
 var upload = multer({ storage: storage }).single('productImage');
 
 router.get('/inputBarang', function (req, res, next){
-    res.render('shop/inputBarang');
+    var messages = req.flash('error')[0];
+    Brand.find(function(err, brands){
+        res.render('admin/inputBarang', {brands: brands, messages:messages, hasErrors: !messages});
+      });
+
 });
 
 
@@ -36,21 +42,28 @@ router.get('/userList', function (req, res, next){
 router.post('/inputBarang', function (req, res) {
     upload(req, res, function (err) {
         if (err){
-            res.redirect('/checkout');
+            req.flash('error', 'Failed to Upload Image Product!');
+            res.redirect('/inputBarang');
         }
-        
+
         // Everything went fine
-        var tbhBarang = new Product({
+        var addProduct = new Product({
             imagePath: req.file.path,
             title: req.body.namaBrg,
-            description: "Apa aja boleh deh",
-            price: 50
+            description: req.body.desc,
+            price: req.body.price,
+            color: req.body.color,
+            brand: req.body.brand,
+            stock: req.body.stock,
+            size: req.body.size,
+            gender: req.body.gender
         });
-        tbhBarang.save(function(err, result){
+        addProduct.save(function(err, result){
             if(err){
-                res.redirect('/checkout');
+                req.flash('error', 'Something Wrong When Add new Product');
+                res.redirect('/inputBarang');
               }
-              req.flash('success', 'Successfully Tambah Product!');
+              req.flash('success', 'Successfully Add New Product!');
               res.redirect('/');
         });
 
@@ -69,11 +82,20 @@ router.post('/inputBarang', function (req, res) {
         //     req.flash('success', 'Successfully Tambah Product!');
         //     res.redirect('/');
         // });
-        
+
     })
-    
-  
 })
+
+router.get('/delete/:id', function (req, res, next){
+  var productId = req.params.id;
+  Product.findByIdAndRemove(productId,function(err, product){
+    if(err){
+      return res.write('Error!');
+    }
+    res.redirect("/user/admin");
+  });
+
+});
 
 
 module.exports = router;

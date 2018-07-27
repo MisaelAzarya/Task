@@ -4,7 +4,9 @@
             <h1>User Profile</h1>
             <hr>
             <h2>My Orders</h2>
+            <h1>Sudah Done</h1>
             {{#each orders}}
+                {{#if this.done}}
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <ul class="list-group">
@@ -22,6 +24,29 @@
                         </div>
                     </div>
                 </div>
+                {{/if}}
+            {{/each}}
+            <h1>Belum Done</h1>
+            {{#each orders}}
+                {{#unless this.done}}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                {{#each this.items}}
+                                    <li class="list-group-item">
+                                        <span class="badge">${{this.price}}</span>
+                                        {{this.item.title}} | {{this.qty}} Units
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <div class="pull-right">
+                                <strong>Total Price: ${{this.cart.totalPrice}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                {{/unless}}
             {{/each}}
         </div>
     </div>

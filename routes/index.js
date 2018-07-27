@@ -176,7 +176,8 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
     user: req.user, // data user
     cart: cart, // data cart
     address: req.body.address, // ambil address dari form body
-    name: req.body.name // ambil name dari form body
+    name: req.body.name, // ambil name dari form body
+    done: false // done itu untuk cek apakah sudah bayar atau belum
   });
   order.save(function(err, result){
     if(err){

@@ -14,12 +14,12 @@
       </ul>
       <div class="tab-content">
         <div class="tab-pane active" id="products">
-          <table class="table table-striped shop_attributes">
+          <table id="data_product" class="table table-striped shop_attributes">
             <thead>
               <th><a href="/product/inputBarang" class="btn btn-info" role="button">Add new Item</a></th>
-              <td>Product Detail</td>
-              <td>Size List</td>
-              <td>Action</td>
+              <td><strong>Product Detail</strong></td>
+              <td><strong>Size List</strong></td>
+              <td><strong>Action</strong></td>
             </thead>
             <tbody>
               {{# each products }}
@@ -51,7 +51,6 @@
                           <a href="/add-to-cart/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">Update</a>
                           <a href="/product/delete/{{this._id}}" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
                         </div>
-
                     </td>
                   </tr>
                   {{/each}}
@@ -61,13 +60,13 @@
         </div>
 
         <div class="tab-pane" id="transactions">
-            <table class="table table-striped shop_attributes">
+            <table id="data_trans" class="table table-striped shop_attributes">
               <thead>
-                <th>Id Transaction</th>
-                <td>Receiver Data</td>
-                <td>Order List</td>
-                <td>Order Status</td>
-                <td>Action</td>
+                <th><strong>Id Transaction</strong></th>
+                <td><strong>Receiver Data</strong></td>
+                <td><strong>Order List</strong></td>
+                <td><strong>Order Status</strong></td>
+                <td><strong>Action</strong></td>
               </thead>
               <tbody>
               {{#each orders}}
@@ -95,6 +94,13 @@
                       <td>
                         <h4>{{this.name}}</h4>
                       </td>
+                      <td>
+                          <div class="btn-group-vertical">
+                            <input type="text" name="resi" placeholder="input resi">
+                            <a href="#" class="btn btn-info" role="button" style="margin:5px;">Input Resi</a>
+                            <a href="#" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
+                          </div>
+                      </td>
                     </tr>
                 {{/each}}
               </tbody>
@@ -102,10 +108,11 @@
         </div>
 
         <div class="tab-pane" id="users">
-          <table class="table table-striped shop_attributes">
+          <table id="data_user" class="table table-striped shop_attributes">
             <thead>
-              <th>Id User</th>
-              <td>Email</td>
+              <th><strong>Id User</strong></th>
+              <td><strong>Email</strong></td>
+              <td><strong>Action</strong></td>
             </thead>
             <tbody>
             {{#each users}}
@@ -119,6 +126,11 @@
                       <h4>{{this.email}}</h4>
                     </td>
 
+                    <td>
+                      <div class="btn-group-vertical">
+                        <a href="/user/profile/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">See Profile</a>
+                      </div>
+                    </td>
                   </tr>
                   {{/each}}
               {{/each}}

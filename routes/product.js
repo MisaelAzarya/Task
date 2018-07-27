@@ -59,7 +59,7 @@ router.post('/inputBarang', function (req, res) {
                 res.redirect('/inputBarang');
               }
               req.flash('success', 'Successfully Add New Product!');
-              res.redirect('/');
+              res.redirect('/user/admin');
         });
 
         // var inputBarang = new Coba({

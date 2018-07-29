@@ -70,7 +70,7 @@ router.get('/delete/:id', function (req, res, next){
   });
 });
 
-// untuk update data product
+// untuk update stock product
 router.post('/update', function(req, res, next){
     var id = req.body.id;
     Product.findOne({_id: id}, function(err, foundObject){
@@ -78,7 +78,9 @@ router.post('/update', function(req, res, next){
             res.status(500).send();
         }
         foundObject.stock = parseInt(foundObject.stock) + parseInt(req.body.qty);
-
+        if(req.body.qty > 0){
+            foundObject.ready = true;
+        }
         foundObject.save(function(err, updatedObject){
             if (err){
                 res.status(500).send();

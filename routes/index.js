@@ -61,6 +61,7 @@ router.get('/add-to-cart2/:id', function(req, res, next){
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
   });
+
   // untuk cari produk berdasarkan id nya
   Product.findById(productId, function(err, product){
     if(err){
@@ -70,7 +71,7 @@ router.get('/add-to-cart2/:id', function(req, res, next){
     // untuk store data cart ke session
     req.session.cart = cart;
     console.log(req.session.cart);
-    res.render('shop/product-detail',{_id:product._id,product_name:product.title, desc:product.description, img:product.imagePath, price:product.price, products:productChunks});
+    res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
   });
   //var messages = req.flash('error');
   //res.render('shop/product-detail', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0})
@@ -88,7 +89,7 @@ router.post('/product-detail', function(req, res, next){
     }
   });
 
-  Product.findById(productId, function(err, product){
+  Product.findOne({_id:productId}, function(err, product){
     if(err){
       return res.redirect('/');
     }
@@ -96,10 +97,20 @@ router.post('/product-detail', function(req, res, next){
     for (i=1;i<req.body.qty;i++){
       cart.addQty(productId);
     }
-    // untuk store data cart ke session
-    req.session.cart = cart;
-    console.log(req.session.cart);
-    res.render('shop/product-detail',{_id:product._id,product_name:product.title, desc:product.description, img:product.imagePath, price:product.price, products:productChunks});
+    product.stock = parseInt(product.stock) - parseInt(req.body.qty);
+    if(product.stock <= 0){
+      product.ready = false;
+      product.stock = 0;
+    }
+    product.save(function(err, updatedProduct){
+      if(err){
+        return res.redirect('/');
+      }
+      // untuk store data cart ke session
+      req.session.cart = cart;
+      console.log(req.session.cart);
+      res.render('shop/product-detail',{_id:updatedProduct._id,product_name:updatedProduct.title,p_brand:updatedProduct.brand, p_color:updatedProduct.color,p_stock:updatedProduct.stock, p_size:updatedProduct.size,p_gender:updatedProduct.gender, desc:updatedProduct.description, img:updatedProduct.imagePath, price:updatedProduct.price, p_ready:updatedProduct.ready, products:productChunks});
+    });
   });
 });
 
@@ -120,7 +131,7 @@ router.get('/product-detail/:id', function(req, res, next){
       return res.redirect('/');
     }
     //console.log(req.session.cart);
-    res.render('shop/product-detail',{_id:product._id,product_name:product.title, desc:product.description, img:product.imagePath, price:product.price, products:productChunks});
+    res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color,p_stock:product.stock, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
   });
 });
 
@@ -129,9 +140,18 @@ router.get('/reduce/:id', function(req, res, next){
   var productId = req.params.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
 
-  cart.reduceByOne(productId);
-  req.session.cart = cart;
-  res.redirect('/shopping-cart');
+  Product.findOne({_id:productId}, function(err, foundProduct){
+    if(foundProduct.stock <= 0){
+      foundProduct.ready = true;
+    }
+    foundProduct.stock = parseInt(foundProduct.stock) + 1;
+    
+    foundProduct.save(function(err, result){
+      cart.reduceByOne(productId);
+      req.session.cart = cart;
+      res.redirect('/shopping-cart');
+    });
+  });
 });
 
 // untuk removeItem function
@@ -139,9 +159,19 @@ router.get('/remove/:id', function(req, res, next){
   var productId = req.params.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
 
-  cart.removeItem(productId);
-  req.session.cart = cart;
-  res.redirect('/shopping-cart');
+  Product.findOne({_id:productId}, function(err, foundProduct){
+    if(foundProduct.stock <= 0){
+      foundProduct.ready = true;
+    }
+    foundProduct.stock = parseInt(foundProduct.stock) + parseInt(cart.getQty(productId));
+    
+    foundProduct.save(function(err, result){
+      cart.removeItem(productId);
+      req.session.cart = cart;
+      res.redirect('/shopping-cart');
+    });
+  });
+ 
 });
 
 // parse data ke shopping cart

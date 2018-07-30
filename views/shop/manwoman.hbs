@@ -23,9 +23,9 @@
                     <li class="span3">
                       <div class="product-box">
                         <span class="sale_tag"></span>
-                        <a href="product_detail.html"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
-                        <a href="product_detail.html" class="title">{{this.title}}</a><br/>
-                        <a href="#" class="category">Suspendisse aliquet</a>
+                        <a href="/product-detail/{{this._id}}"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
+                        <a href="/product-detail/{{this._id}}" class="title">{{this.title}}</a><br/>
+                        <a href="/product-detail/{{this._id}}" class="category">{{this.description}}</a>
                         <p class="price">Rp{{this.price}}</p>
                       </div>
                     </li>
@@ -66,10 +66,9 @@
           <br/>
           <ul class="nav nav-list below">
             <li class="nav-header">BRANDS</li>
-            <li><a href="products.html">Adidas</a></li>
-            <li><a href="products.html">Nike</a></li>
-            <li><a href="products.html">Dunlop</a></li>
-            <li><a href="products.html">Yamaha</a></li>
+            {{#each brands}}
+              <li><a href="/viewproductbrand/{{this.name}}">{{this.name}}</a></li>
+            {{/each}}
           </ul>
         </div>
     </div>

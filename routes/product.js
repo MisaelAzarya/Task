@@ -55,7 +55,8 @@ router.post('/inputBarang', function (req, res) {
             brand: req.body.brand,
             stock: req.body.stock,
             size: req.body.size,
-            gender: req.body.gender
+            gender: req.body.gender,
+            ready: true
         });
         addProduct.save(function(err, result){
             if(err){

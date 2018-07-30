@@ -9,13 +9,17 @@
     <div class="span10">
           <div class="row">
             <div class="span4">
-              <a href="/themes/images/ladies/1.jpg" class="thumbnail" data-fancybox-group="group1" title="Description 1"><img alt="" src="/../../{{img}}"></a>
+              <a href="../../{{img}}" class="thumbnail" data-fancybox-group="group1" title="Description 1"><img alt="" src="../../{{img}}"></a>
             </div>
             <div class="span5">
               <address>
-                <strong>Brand:</strong> <span>{{brand}}</span><br>
+                <strong>Brand:</strong> <span>{{p_brand}}</span><br>
                 <strong>Product Name:</strong> <span>{{product_name}}</span><br>
-                <strong>Availability:</strong> <span>{{stock}}</span><br>
+                {{#if p_ready}}
+                  <strong>Stock:</strong> <span>{{p_stock}}</span><br>
+                {{else}}
+                  <strong>Stock:</strong> <span>Out Of Stock</span><br>
+                {{/if}}
               </address>
               <h4><strong>Price: Rp{{price}}</strong></h4>
             </div>
@@ -76,16 +80,15 @@
         <div class="block">
           <ul class="nav nav-list">
             <li class="nav-header">CATEGORIES</li>
-            <li><a href="/manwoman">Woman</a></li>
-            <li><a href="/manwoman">Man</a></li>
+            <li><a href="/manwoman/Woman">Woman</a></li>
+            <li><a href="/manwoman/Man">Man</a></li>
           </ul>
           <br/>
           <ul class="nav nav-list below">
             <li class="nav-header">BRANDS</li>
-            <li><a href="products.html">Adidas</a></li>
-            <li><a href="products.html">Nike</a></li>
-            <li><a href="products.html">Dunlop</a></li>
-            <li><a href="products.html">Yamaha</a></li>
+            {{#each brands}}
+              <li><a href="/viewproductbrand/{{this.name}}">{{this.name}}</a></li>
+            {{/each}}
           </ul>
         </div>
     </div>
@@ -110,9 +113,9 @@
                     <li class="span3">
                       <div class="product-box">
                         <span class="sale_tag"></span>
-                        <a href="product_detail.html"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
-                        <a href="product_detail.html" class="title">{{this.title}}</a><br/>
-                        <a href="#" class="category">Suspendisse aliquet</a>
+                        <a href="/product-detail/{{this._id}}"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
+                        <a href="/product-detail/{{this._id}}" class="title">{{this.title}}</a><br/>
+                        <a href="/product-detail/{{this._id}}" class="category">{{this.description}}</a>
                         <p class="price">Rp{{this.price}}</p>
                       </div>
                     </li>

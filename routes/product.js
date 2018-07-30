@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 var User = require('../models/user');
-var Coba = require('../models/coba');
 var Product = require('../models/products');
 var Order = require('../models/order');
 var Brand = require('../models/brand');
@@ -29,7 +28,7 @@ var upload = multer({ storage: storage }).single('productImage');
 router.get('/inputBarang', function (req, res, next){
     var messages = req.flash('error')[0];
     Brand.find(function(err, brands){
-        res.render('admin/inputBarang', {brands: brands, messages:messages, hasErrors: !messages});
+        res.render('admins/inputBarang', {brands: brands, messages:messages, hasErrors: !messages});
       });
 
 });
@@ -51,7 +50,8 @@ router.post('/inputBarang', function (req, res) {
             brand: req.body.brand,
             stock: req.body.stock,
             size: req.body.size,
-            gender: req.body.gender
+            gender: req.body.gender,
+            ready: true
         });
         addProduct.save(function(err, result){
             if(err){
@@ -61,26 +61,10 @@ router.post('/inputBarang', function (req, res) {
               req.flash('success', 'Successfully Add New Product!');
               res.redirect('/user/admin');
         });
-
-        // var inputBarang = new Coba({
-        //     name: req.body.namaBrg,
-        //     stock: req.body.stock,
-        //     gender: req.body.gender,
-        //     ukuran: req.body.size,
-        //     brand: req.body.brand,
-        //     productImage: req.file.path
-        // });
-        // inputBarang.save(function(err, result){
-        //     if(err){
-        //       res.redirect('/checkout');
-        //     }
-        //     req.flash('success', 'Successfully Tambah Product!');
-        //     res.redirect('/');
-        // });
-
     })
-})
+});
 
+// untuk delete data product
 router.get('/delete/:id', function (req, res, next){
   var productId = req.params.id;
   Product.findByIdAndRemove(productId,function(err, product){
@@ -92,5 +76,24 @@ router.get('/delete/:id', function (req, res, next){
 
 });
 
+// untuk update stock product
+router.post('/update', function(req, res, next){
+    var id = req.body.id;
+    Product.findOne({_id: id}, function(err, foundObject){
+        if (err){
+            res.status(500).send();
+        }
+        foundObject.stock = parseInt(foundObject.stock) + parseInt(req.body.qty);
+        if(req.body.qty > 0){
+            foundObject.ready = true;
+        }
+        foundObject.save(function(err, updatedObject){
+            if (err){
+                res.status(500).send();
+            }
+            res.redirect('/user/admin');
+        });
+    });
+});
 
 module.exports = router;

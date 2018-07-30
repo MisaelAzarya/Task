@@ -10,7 +10,8 @@ var schema = new Schema({
   brand: {type: String, required:true},
   stock: {type: Number, required: true},
   size: {type: Array, required: true},
-  gender: {type: String, required: true}
+  gender: {type: String, required: true},
+  ready: {type: Boolean, required:true}
 });
 
 module.exports = mongoose.model('Product', schema);

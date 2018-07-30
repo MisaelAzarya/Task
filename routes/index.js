@@ -60,36 +60,6 @@ router.get('/add-to-cart/:id', function(req, res, next){
   });
 });
 
-<<<<<<< HEAD
-=======
-router.get('/add-to-cart2/:id', function(req, res, next){
-  var productId = req.params.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-  var productChunks = [];
-
-  Product.find(function(err, docs){
-    var chunkSize = 3;
-    for (var i = 0; i < docs.length; i+= chunkSize) {
-      productChunks.push(docs.slice(i, i+ chunkSize));
-    }
-  });
-
-  // untuk cari produk berdasarkan id nya
-  Product.findById(productId, function(err, product){
-    if(err){
-      return res.redirect('/');
-    }
-    cart.add(product, product.id);
-    // untuk store data cart ke session
-    req.session.cart = cart;
-    console.log(req.session.cart);
-    res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
-  });
-  //var messages = req.flash('error');
-  //res.render('shop/product-detail', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0})
-});
-
->>>>>>> 181680417f2ed048edd42928df417e330bf1ae27
 router.post('/product-detail', function(req, res, next){
   var productId = req.body.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
@@ -144,11 +114,7 @@ router.get('/product-detail/:id', function(req, res, next){
       return res.redirect('/');
     }
     //console.log(req.session.cart);
-<<<<<<< HEAD
     res.render('shop/product-detail',{_id:product._id,product_name:product.title, desc:product.description, img:product.imagePath, price:product.price,brand:product.brand,stock:product.stock,gender:product.gender,size:product.size, products:productChunks});
-=======
-    res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color,p_stock:product.stock, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
->>>>>>> 181680417f2ed048edd42928df417e330bf1ae27
   });
 });
 

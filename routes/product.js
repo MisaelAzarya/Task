@@ -70,17 +70,12 @@ router.post('/inputBarang', function (req, res) {
 
 // untuk delete data product
 router.get('/delete/:id', function (req, res, next){
-<<<<<<< HEAD
   var productId = req.params.id;
   Product.findByIdAndRemove(productId,function(err, product){
     if(err){
       return res.write('Error!');
     }
     res.redirect("/user/admin");
-=======
-  Product.findByIdAndRemove(req.params.id,function(err, product){
-    res.redirect('/user/admin');
->>>>>>> 181680417f2ed048edd42928df417e330bf1ae27
   });
 
 });

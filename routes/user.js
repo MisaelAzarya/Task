@@ -94,7 +94,7 @@ router.get('/userList', isLoggedIn,function(req, res, next){
               for (var i = 0; i < docs.length; i+= chunkSize) {
                 userChunks.push(docs.slice(i, i+ chunkSize));
               }
-            res.render('user/admin',{products: productChunks, orders: orders, users:userChunks});
+            res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks});
           });
       //res.render('user/admin',{products: productChunks,orders: orders});
     });

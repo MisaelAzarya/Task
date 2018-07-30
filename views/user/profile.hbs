@@ -4,7 +4,7 @@
             <h1>User Profile</h1>
             <hr>
             <h2>My Orders</h2>
-            <h1>Sudah Done</h1>
+            <h1>History</h1>
             {{#each orders}}
                 {{#if this.done}}
                 <div class="panel panel-default">
@@ -26,7 +26,7 @@
                 </div>
                 {{/if}}
             {{/each}}
-            <h1>Belum Done</h1>
+            <h1>On Progress</h1>
             {{#each orders}}
                 {{#unless this.done}}
                     <div class="panel panel-default">

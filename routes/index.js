@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+var Brand = require('../models/brand');
 var Cart = require('../models/cart');
 var Product = require('../models/products');
 var Order = require('../models/order');
@@ -19,14 +19,19 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/manwoman', function(req, res, next) {
-  Product.find(function(err, docs){
+router.get('/manwoman/:gender', function(req, res, next) {
+  var gender=req.params.gender;
+  Product.find({gender:gender},function(err, docs){
     var productChunks = [];
     var chunkSize = 3;
     for (var i = 0; i < docs.length; i+= chunkSize) {
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
-    res.render('shop/manwoman', { title: 'Shopping Cart', products: productChunks});
+    Brand.find(function(err, brands){
+      res.render('shop/manwoman', { title: 'Shopping Cart', products: productChunks, brands:brands});
+          //res.render('shop/product-detail',{brands:brands,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
+    });
+
   });
 });
 //get page with woman category
@@ -81,6 +86,7 @@ router.get('/add-to-cart2/:id', function(req, res, next){
     // untuk store data cart ke session
     req.session.cart = cart;
     console.log(req.session.cart);
+
     res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
   });
   //var messages = req.flash('error');
@@ -141,7 +147,10 @@ router.get('/product-detail/:id', function(req, res, next){
       return res.redirect('/');
     }
     //console.log(req.session.cart);
-    res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color,p_stock:product.stock, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
+    Brand.find(function(err, brands){
+          res.render('shop/product-detail',{brands:brands,p_stock:product.stock,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
+    });
+    //res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color,p_stock:product.stock, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
   });
 });
 

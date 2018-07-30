@@ -80,16 +80,15 @@
         <div class="block">
           <ul class="nav nav-list">
             <li class="nav-header">CATEGORIES</li>
-            <li><a href="/manwoman">Woman</a></li>
-            <li><a href="/manwoman">Man</a></li>
+            <li><a href="/manwoman/Woman">Woman</a></li>
+            <li><a href="/manwoman/Man">Man</a></li>
           </ul>
           <br/>
           <ul class="nav nav-list below">
             <li class="nav-header">BRANDS</li>
-            <li><a href="products.html">Adidas</a></li>
-            <li><a href="products.html">Nike</a></li>
-            <li><a href="products.html">Dunlop</a></li>
-            <li><a href="products.html">Yamaha</a></li>
+            {{#each brands}}
+              <li><a href="/viewproductbrand/{{this.name}}">{{this.name}}</a></li>
+            {{/each}}
           </ul>
         </div>
     </div>

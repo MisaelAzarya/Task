@@ -103,9 +103,11 @@ router.get('/delete/:id', function (req, res, next){
     if(err){
       return res.write('Error!');
     }
-    res.redirect("/user/admin");
+    var fs=require('fs');
+    fs.unlink(product.imagePath, function() {
+        res.redirect("/user/admin");
+    });
   });
-
 });
 
 // untuk update stock product

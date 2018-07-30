@@ -10,6 +10,7 @@
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a data-toggle="tab" href="#products">Product List</a></li>
         <li class=""><a data-toggle="tab" href="#transactions">Transaction List</a></li>
+        <li class=""><a data-toggle="tab" href="#orders">Order List</a></li>
         <li class=""><a data-toggle="tab" href="#users">User List</a></li>
       </ul>
       <div class="tab-content">
@@ -50,7 +51,7 @@
                     </td>
                     <td>
                         <div class="btn-group-vertical">
-                          {{!-- <a href="/add-to-cart/{{this._id}}" class="btn btn-info" role="button">Update</a> --}}
+                          <a href="/product/updateBarang/{{this._id}}" class="btn btn-info" role="button">Update</a>
                           <a href="/product/delete/{{this._id}}" class="btn btn-danger" role="button" style="margin-top:10px;">Delete</a>
                         </div>
                     </td>
@@ -107,6 +108,110 @@
                 {{/each}}
               </tbody>
             </table>
+        </div>
+
+        <div class="tab-pane" id="orders">
+          <ul class="nav nav-tabs" id="orderTab">
+            <li class="active"><a data-toggle="tab" href="#accepted">Accepted Order</a></li>
+            <li class=""><a data-toggle="tab" href="#rejected">Rejected Order</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="accepted">
+                <table id="data_accept" class="table table-striped shop_attributes">
+                  <thead>
+                    <th><strong>Id Transaction</strong></th>
+                    <td><strong>Receive Data</strong></td>
+                    <td><strong>Order List</strong></td>
+                    <td><strong>Order Status</strong></td>
+                    <td><strong>Action</strong></td>
+                  </thead>
+                  <tbody>
+                  {{#each orders}}
+                        <tr class="">
+                          <th>
+                              <h4>{{this._id}}</h4>
+                          </th>
+
+                          <td>
+                            <h4>{{this.name}}</h4>
+                            <h5>{{this.address}}</h5>
+                          </td>
+
+                          <td>
+                            <ul class="list-group">
+                                {{#each this.items}}
+                                    <li class="list-group-item">
+                                        <span class="badge">${{this.price}}</span>
+                                        {{this.item.title}} | {{this.qty}} Units
+                                    </li>
+                                {{/each}}
+                            </ul>
+                          </td>
+
+                          <td>
+                            <h4>{{this.name}}</h4>
+                          </td>
+                          <td>
+                              <div class="btn-group-vertical">
+                                <input type="text" name="resi" placeholder="input resi">
+                                <a href="#" class="btn btn-info" role="button" style="margin:5px;">Input Resi</a>
+                                <a href="#" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
+                              </div>
+                          </td>
+                        </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane" id="rejected">
+                <table id="data_reject" class="table table-striped shop_attributes">
+                  <thead>
+                    <th><strong>Id Transaction</strong></th>
+                    <td><strong>Receiver Data</strong></td>
+                    <td><strong>Order List</strong></td>
+                    <td><strong>Order Status</strong></td>
+                    <td><strong>Action</strong></td>
+                  </thead>
+                  <tbody>
+                  {{#each orders}}
+                        <tr class="">
+                          <th>
+                              <h4>{{this._id}}</h4>
+                          </th>
+
+                          <td>
+                            <h4>{{this.name}}</h4>
+                            <h5>{{this.address}}</h5>
+                          </td>
+
+                          <td>
+                            <ul class="list-group">
+                                {{#each this.items}}
+                                    <li class="list-group-item">
+                                        <span class="badge">${{this.price}}</span>
+                                        {{this.item.title}} | {{this.qty}} Units
+                                    </li>
+                                {{/each}}
+                            </ul>
+                          </td>
+
+                          <td>
+                            <h4>{{this.name}}</h4>
+                          </td>
+                          <td>
+                              <div class="btn-group-vertical">
+                                <input type="text" name="resi" placeholder="input resi">
+                                <a href="#" class="btn btn-info" role="button" style="margin:5px;">Input Resi</a>
+                                <a href="#" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
+                              </div>
+                          </td>
+                        </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+            </div>
+          </div>
         </div>
 
         <div class="tab-pane" id="users">

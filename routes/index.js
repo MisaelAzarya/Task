@@ -19,6 +19,22 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.post('/search', function(req, res, next){
+  var keyword=req.body.search;
+  const regex = new RegExp(escapeRegex(keyword),'gi');
+  Product.find({title:regex},function(err, docs){
+    var productChunks = [];
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+    Brand.find(function(err, brands){
+      res.render('shop/searchbyname', { title: 'Shopping Cart', products: productChunks, brands:brands});
+          //res.render('shop/product-detail',{brands:brands,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
+    });
+  });
+});
+
 router.get('/manwoman/:gender', function(req, res, next) {
   var gender=req.params.gender;
   Product.find({gender:gender},function(err, docs){
@@ -92,6 +108,8 @@ router.get('/add-to-cart2/:id', function(req, res, next){
   //var messages = req.flash('error');
   //res.render('shop/product-detail', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0})
 });
+
+
 
 router.post('/product-detail', function(req, res, next){
   var productId = req.body.id;
@@ -248,3 +266,7 @@ function isLoggedIn(req, res, next){
   req.session.oldUrl = req.url;
   res.redirect('/user/signin');
 }
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};

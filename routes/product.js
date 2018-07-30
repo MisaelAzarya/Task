@@ -33,6 +33,38 @@ router.get('/inputBarang', function (req, res, next){
 
 });
 
+router.get('/updateBarang/:id', function (req, res, next){
+    var messages = req.flash('error')[0];
+      Product.findById(req.params.id, function(err, product){
+            res.render('admins/updateBarang', {p_stock:product.stock,_id:product._id,product_name:product.title,p_brand:product.brand,
+              p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, messages:messages, hasErrors: !messages});
+      });
+});
+
+router.post('/updateBarang/:id', function (req, res) {
+        // Everything went fine
+
+          /*title= req.body.namaBrg,
+            description=req.body.desc,
+            price= req.body.price,
+            color= req.body.color,
+            brand= req.body.brand,
+            stock= req.body.stock,
+            size: req.body.size,
+            gender= req.body.gender,
+            ready= true*/
+
+        Product.findByIdAndUpdate(req.params.id, req.body,{new: true},function(err, result){
+            if(err){
+                req.flash('error', 'Something Wrong When Update Product');
+                res.redirect('/updateBarang');
+              }
+              req.flash('success', 'Successfully Update Product!');
+              //res.send(result);
+              res.redirect('/user/admin');
+        });
+});
+
 router.post('/inputBarang', function (req, res) {
     upload(req, res, function (err) {
         if (err){

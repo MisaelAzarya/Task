@@ -52,6 +52,7 @@ router.post('/updateBarang/:id', function (req, res) {
               foundObject.description=req.body.desc;
               foundObject.price= parseInt(req.body.price);
               foundObject.color= req.body.color;
+              //foundObject.size= req.body.size;
               foundObject.stock= parseInt(req.body.stock);
 
 

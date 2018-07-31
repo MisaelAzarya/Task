@@ -10,7 +10,6 @@
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a data-toggle="tab" href="#products">Product List</a></li>
         <li class=""><a data-toggle="tab" href="#transactions">Transaction List</a></li>
-        <li class=""><a data-toggle="tab" href="#orders">Order List</a></li>
         <li class=""><a data-toggle="tab" href="#users">User List</a></li>
       </ul>
       <div class="tab-content">
@@ -18,8 +17,9 @@
           <table id="data_product" class="table table-striped shop_attributes">
             <thead>
               <th><a href="/product/inputBarang" class="btn btn-info" role="button">Add new Item</a></th>
+              <td><strong>Brand</strong></td>
               <td><strong>Product Detail</strong></td>
-              <td><strong>Size List</strong></td>
+              <td><strong>Size Color List</strong></td>
               <td><strong>Action</strong></td>
             </thead>
             <tbody>
@@ -31,6 +31,11 @@
                         <img class="img-responsive rounded mx-auto d-block" src="/../../{{this.imagePath}}">
                       </div>
                     </th>
+
+                    <td>
+                        <p><strong>{{this.brand}}</strong></p>
+                    </td>
+
                     <td>
                         <h4 style="color:#eb4700;">{{this.title}}</h4>
                         <h5>Rp. {{this.price}}</h5>
@@ -41,13 +46,19 @@
                           <input type="number" name="qty" style="width: 70px;">
                           <button type="submit" class="btn-success">Add Stocks</button>
                         </form>
+                        <br>
+                        <p>{{this.color}}</p>
+                        <p>{{this.gender}}</p>
                     </td>
                     <td>
-                      <ul style="list-style:none;">
+                      <h5>Size : </h5>
+                        <table>
                         {{#each this.size}}
-                          <li><h4>{{this}}</h4></li>
+                          <th>
+                            <td>{{this}}</td>
+                          </th>
                         {{/each}}
-                      </ul>
+                      </table>
                     </td>
                     <td>
                         <div class="btn-group-vertical">
@@ -108,110 +119,6 @@
                 {{/each}}
               </tbody>
             </table>
-        </div>
-
-        <div class="tab-pane" id="orders">
-          <ul class="nav nav-tabs" id="orderTab">
-            <li class="active"><a data-toggle="tab" href="#accepted">Accepted Order</a></li>
-            <li class=""><a data-toggle="tab" href="#rejected">Rejected Order</a></li>
-          </ul>
-          <div class="tab-content">
-            <div class="tab-pane active" id="accepted">
-                <table id="data_accept" class="table table-striped shop_attributes">
-                  <thead>
-                    <th><strong>Id Transaction</strong></th>
-                    <td><strong>Receive Data</strong></td>
-                    <td><strong>Order List</strong></td>
-                    <td><strong>Order Status</strong></td>
-                    <td><strong>Action</strong></td>
-                  </thead>
-                  <tbody>
-                  {{#each orders}}
-                        <tr class="">
-                          <th>
-                              <h4>{{this._id}}</h4>
-                          </th>
-
-                          <td>
-                            <h4>{{this.name}}</h4>
-                            <h5>{{this.address}}</h5>
-                          </td>
-
-                          <td>
-                            <ul class="list-group">
-                                {{#each this.items}}
-                                    <li class="list-group-item">
-                                        <span class="badge">${{this.price}}</span>
-                                        {{this.item.title}} | {{this.qty}} Units
-                                    </li>
-                                {{/each}}
-                            </ul>
-                          </td>
-
-                          <td>
-                            <h4>{{this.name}}</h4>
-                          </td>
-                          <td>
-                              <div class="btn-group-vertical">
-                                <input type="text" name="resi" placeholder="input resi">
-                                <a href="#" class="btn btn-info" role="button" style="margin:5px;">Input Resi</a>
-                                <a href="#" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
-                              </div>
-                          </td>
-                        </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-            </div>
-
-            <div class="tab-pane" id="rejected">
-                <table id="data_reject" class="table table-striped shop_attributes">
-                  <thead>
-                    <th><strong>Id Transaction</strong></th>
-                    <td><strong>Receiver Data</strong></td>
-                    <td><strong>Order List</strong></td>
-                    <td><strong>Order Status</strong></td>
-                    <td><strong>Action</strong></td>
-                  </thead>
-                  <tbody>
-                  {{#each orders}}
-                        <tr class="">
-                          <th>
-                              <h4>{{this._id}}</h4>
-                          </th>
-
-                          <td>
-                            <h4>{{this.name}}</h4>
-                            <h5>{{this.address}}</h5>
-                          </td>
-
-                          <td>
-                            <ul class="list-group">
-                                {{#each this.items}}
-                                    <li class="list-group-item">
-                                        <span class="badge">${{this.price}}</span>
-                                        {{this.item.title}} | {{this.qty}} Units
-                                    </li>
-                                {{/each}}
-                            </ul>
-                          </td>
-
-                          <td>
-                            <h4>{{this.name}}</h4>
-                          </td>
-                          <td>
-                              <div class="btn-group-vertical">
-                                <input type="text" name="resi" placeholder="input resi">
-                                <a href="#" class="btn btn-info" role="button" style="margin:5px;">Input Resi</a>
-                                <a href="#" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
-                              </div>
-                          </td>
-                        </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-            </div>
-          </div>
         </div>
 
         <div class="tab-pane" id="users">

@@ -1,0 +1,80 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+  <section class="header_text">
+    <h2><span>Product Detail</span></h2>
+  </section>
+
+  <section class="main-content">
+  <div class="row">
+
+    <div class="span10">
+      <h4 class="title">
+        <span class="pull-left"><span class="text"><strong>Related</strong> Products</span></span>
+        <span class="pull-right">
+          <a class="left button" href="#myCarousel-1" data-slide="prev"></a><a class="right button" href="#myCarousel-1" data-slide="next"></a>
+        </span>
+      </h4>
+      <div id="myCarousel-1" class="carousel slide">
+        <div class="carousel-inner">
+          <div class="active item">
+            <ul class="thumbnails listing-products" style="list-style:none;">
+              {{# each products }}
+                {{!-- <div class="row"> --}}
+                  {{# each this}}
+                    <li class="span3">
+                      <div class="product-box">
+                        <span class="sale_tag"></span>
+                        <a href="/product-detail/{{this._id}}"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
+                        <a href="/product-detail/{{this._id}}" class="title">{{this.title}}</a><br/>
+                        <a href="/product-detail/{{this._id}}" class="category">{{this.description}}</a>
+                        <p class="price">Rp{{this.price}}</p>
+                      </div>
+                    </li>
+                  {{/each}}
+              {{/each}}
+            </ul>
+
+          </div>
+          <div class="item">
+            <ul class="thumbnails listing-products" style="list-style:none;">
+              {{# each products }}
+                {{!-- <div class="row"> --}}
+                  {{# each this}}
+                    <li class="span3">
+                      <div class="product-box">
+                        <span class="sale_tag"></span>
+                        <a href="product_detail.html"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
+                        <a href="product_detail.html" class="title">{{this.title}}</a><br/>
+                        <a href="#" class="category">Suspendisse aliquet</a>
+                        <p class="price">Rp{{this.price}}</p>
+                      </div>
+                    </li>
+                  {{/each}}
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="span2" style="width:150px;margin-left:20px;">
+        <div class="block">
+          <ul class="nav nav-list">
+            <li class="nav-header">CATEGORIES</li>
+            <li><a href="/manwoman">Woman</a></li>
+            <li><a href="/manwoman">Man</a></li>
+          </ul>
+          <br/>
+          <ul class="nav nav-list below">
+            <li class="nav-header">BRANDS</li>
+            {{#each brands}}
+              <li><a href="/viewproductbrand/{{this.name}}">{{this.name}}</a></li>
+            {{/each}}
+          </ul>
+        </div>
+    </div>
+
+  </div>
+  </section>
+</div>
+
+<!-- src="../..{{img}}" !-->

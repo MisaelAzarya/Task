@@ -42,27 +42,27 @@ router.get('/updateBarang/:id', function (req, res, next){
 });
 
 router.post('/updateBarang/:id', function (req, res) {
-        // Everything went fine
 
-          /*title= req.body.namaBrg,
-            description=req.body.desc,
-            price= req.body.price,
-            color= req.body.color,
-            brand= req.body.brand,
-            stock= req.body.stock,
-            size: req.body.size,
-            gender= req.body.gender,
-            ready= true*/
-
-        Product.findByIdAndUpdate(req.params.id, req.body,{new: true},function(err, result){
+      Product.findById(req.params.id,function(err, foundObject){
             if(err){
                 req.flash('error', 'Something Wrong When Update Product');
                 res.redirect('/updateBarang');
               }
-              req.flash('success', 'Successfully Update Product!');
-              //res.send(result);
-              res.redirect('/user/admin');
+
+              foundObject.description=req.body.desc;
+              foundObject.price= parseInt(req.body.price);
+              foundObject.color= req.body.color;
+              foundObject.stock= parseInt(req.body.stock);
+
+
+              foundObject.save(function(err, updatedObject){
+                  if (err){
+                     res.status(500).send();
+                  }
+                  res.redirect('/user/admin');
+             });
         });
+
 });
 
 router.post('/inputBarang', function (req, res) {
@@ -71,7 +71,7 @@ router.post('/inputBarang', function (req, res) {
             req.flash('error', 'Failed to Upload Image Product!');
             res.redirect('/inputBarang');
         }
-
+        console.log("just "+ req.body.namaBrg);
         // Everything went fine
         var addProduct = new Product({
             imagePath: req.file.path,

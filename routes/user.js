@@ -10,7 +10,7 @@ var User = require('../models/user');
 var csrfProtection = csrf();
 router.use(csrfProtection);
 
-// ketika terima user/profile dari successRedirect
+
 router.get('/profile', isLoggedIn,function(req, res, next){
   // untuk ambil data order berdasarkan user id
   Order.find({user: req.user}, function(err, orders){
@@ -26,6 +26,19 @@ router.get('/profile', isLoggedIn,function(req, res, next){
   });
 });
 
+
+
+router.get('/transaction', isLoggedIn,function(req, res, next){
+    res.render('user/transaction');
+  });
+
+
+
+
+// ketika terima user/profile dari successRedirect
+router.get('/history', isLoggedIn,function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+  Order.find({user: req.user}, function(err, orders){
 router.get('/profile/:id',function(req, res, next){
   // untuk ambil data order berdasarkan user id
   Order.find({user:req.params.id}, function(err, orders){
@@ -52,6 +65,22 @@ router.get('/admin', function(req, res, next){
       cart = new Cart(order.cart);
       order.items = cart.generateArray();
     });
+    res.render('user/history', {orders: orders});
+  });
+});
+
+
+router.get('/userList', isLoggedIn,function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+  User.find( function(err, users){
+    if(err){
+      return res.write('Error!');
+    }
+    res.render('admin/userList', {users: users});
+  });
+});
+
+
 
       Product.find(function(err, docs){
         var productChunks = [];

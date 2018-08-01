@@ -49,3 +49,35 @@
     {{!-- </div> --}}
   {{/each}}
 </div>
+
+<section>
+<div class="container" style="background-color:white;margin-top:-50px;">
+<div class="row">
+      <h4 class="title">
+        <span class="pull-left"><span class="text"><strong>Best</strong> Seller</span></span>
+        <span class="pull-right">
+          <a class="left button" href="#myCarousel-1" data-slide="prev"></a><a class="right button" href="#myCarousel-1" data-slide="next"></a>
+        </span>
+      </h4>
+      {{# each products }}
+    {{!-- <div class="row"> --}}
+      {{# each this}}
+      <div class="col-sm-6 col-md-4">
+        <div class="product-box thumbnail img-thumbnail">
+          <img class="img-responsive rounded mx-auto d-block" src="{{this.imagePath}}">
+          <div class="caption">
+            <a href="/product-detail/{{this._id}}"><h3>{{this.title}}</h3></a>
+            <p>{{this.description}}</p>
+            <div class="clearfix">
+              <div class="price">Rp{{this.price}}</div>
+              <!--<a href="/add-to-cart/{{this._id}}" class="btn btn-info pull-right" role="button">Buy</a>!-->
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    {{!-- </div> --}}
+  {{/each}}
+      </div>
+      </div>
+      </section>

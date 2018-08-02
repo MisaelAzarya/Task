@@ -11,7 +11,8 @@ var schema = new Schema({
   stock: {type: Number, required: true},
   size: {type: Array, required: true},
   gender: {type: String, required: true},
-  ready: {type: Boolean, required:true}
+  ready: {type: Boolean, required:true},
+  upload_date: {type: Date, required: true}
 });
 
 module.exports = mongoose.model('Product', schema);

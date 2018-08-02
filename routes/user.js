@@ -7,6 +7,9 @@ var Order = require('../models/order');
 var Cart = require('../models/cart');
 var User = require('../models/user');
 
+var shipping = require('shipping-indonesia');
+shipping.init('25134fceb7cf5271a12a2bade0c54fce');
+
 var csrfProtection = csrf();
 router.use(csrfProtection);
 
@@ -52,7 +55,6 @@ router.get('/admin', function(req, res, next){
               }
             res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks});
           });
-      //res.render('user/admin',{products: productChunks,orders: orders});
     });
   });
 
@@ -72,7 +74,9 @@ router.use('/', notLoggedIn, function(req, res, next){
 // ketika ingin masuk ke user/signup
 router.get('/signup', function(req, res, next){
   var messages = req.flash('error');
-  res.render('user/signup', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0})
+  shipping.getAllCity(city => {
+    res.render('user/signup', {csrfToken: req.csrfToken(), city:city , messages: messages, hasErrors: messages.length > 0});
+  });
 });
 
 // ketika button submit dari user/signup di klik, maka masuk ke sini

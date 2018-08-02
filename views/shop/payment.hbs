@@ -1,0 +1,14 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+           <h1>Tesssssttt</h1>
+            {{#each ongkir}}
+                <p>{{this.service}}</p>
+                {{#each detail}}
+                    <p>Biaya: {{this.value}}</p>
+                    <p>Estimate: {{this.etd}} days</p>
+                {{/each}}
+            {{/each}}
+        </div>
+    </div>
+</div>

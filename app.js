@@ -15,6 +15,9 @@ var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 
+var shipping = require('shipping-indonesia');
+shipping.init('25134fceb7cf5271a12a2bade0c54fce');
+
 var app = express();
 
 // connect to mongoDB

@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
-var User = require('../models/user');
 var Product = require('../models/products');
-var Order = require('../models/order');
 var Brand = require('../models/brand');
 
 var storage = multer.diskStorage({
@@ -25,6 +23,7 @@ var fileFilter = function(req, file, cb){
 
 var upload = multer({ storage: storage }).single('productImage');
 
+// untuk masuk ke menu input barang
 router.get('/inputBarang', function (req, res, next){
     var messages = req.flash('error')[0];
     Brand.find(function(err, brands){
@@ -33,14 +32,15 @@ router.get('/inputBarang', function (req, res, next){
 
 });
 
+// untuk ambil data dari form input barang
 router.post('/inputBarang', function (req, res) {
     upload(req, res, function (err) {
         if (err){
             req.flash('error', 'Failed to Upload Image Product!');
             res.redirect('/inputBarang');
         }
-
         // Everything went fine
+        var tanggal = new Date;
         var addProduct = new Product({
             imagePath: req.file.path,
             title: req.body.namaBrg,
@@ -50,7 +50,9 @@ router.post('/inputBarang', function (req, res) {
             brand: req.body.brand,
             stock: req.body.stock,
             size: req.body.size,
-            gender: req.body.gender
+            gender: req.body.gender,
+            ready: true,
+            upload_date: tanggal
         });
         addProduct.save(function(err, result){
             if(err){

@@ -4,6 +4,12 @@ var router = express.Router();
 var Cart = require('../models/cart');
 var Product = require('../models/products');
 var Order = require('../models/order');
+var User = require('../models/user');
+
+var shipping = require('shipping-indonesia');
+shipping.init('25134fceb7cf5271a12a2bade0c54fce');
+var hbs = require('hbs');
+hbs.registerHelper('equal', require('handlebars-helper-equal'));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -19,11 +25,12 @@ router.get('/', function(req, res, next) {
   });
 });
 
-//get page with woman category
-/*router.get('/index/:id', function(req, res, next) {
+// woman
+router.get('/woman', function(req, res, next) {
   var successMsg = req.flash('success')[0];
+  var gender = "Woman";
   // ambil data dari products
-  Product.find(function(err, docs){
+  Product.find({gender: gender}, function(err, docs){
     var productChunks = [];
     var chunkSize = 3;
     for (var i = 0; i < docs.length; i+= chunkSize) {
@@ -31,7 +38,22 @@ router.get('/', function(req, res, next) {
     }
     res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
   });
-});*/
+});
+
+// man
+router.get('/man', function(req, res, next) {
+  var successMsg = req.flash('success')[0];
+  var gender = "Man";
+  // ambil data dari products
+  Product.find({gender: gender}, function(err, docs){
+    var productChunks = [];
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
+  });
+});
 
 // untuk masukkan id barang ke cart
 router.get('/add-to-cart/:id', function(req, res, next){
@@ -192,8 +214,18 @@ router.get('/checkout', isLoggedIn, function(req, res, next){
   if(!req.session.cart){
     return res.redirect('/shopping-cart');
   }
+  
   var cart = new Cart(req.session.cart);
-  res.render('shop/checkout', {total: cart.totalPrice});
+  User.findOne({_id: req.user._id}, function(err, foundUser){
+    var fullName = foundUser.firstName + " " + foundUser.lastName;
+    var phone = foundUser.phone;
+    var address = foundUser.address;
+    var cityId = foundUser.cityId;
+    var cityName = foundUser.city;
+    shipping.getAllCity(city => {
+      res.render('shop/checkout', {total: cart.totalPrice, u_name: fullName, u_phone: phone, u_address: address, u_cId: cityId, u_cName: cityName, cities: city});
+    });
+  });
 });
 
 // ketika button submit pada checkout di klik, maka akan store data ke database
@@ -202,20 +234,34 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
     return res.redirect('/shopping-cart');
   }
   var cart = new Cart(req.session.cart);
-  var order = new Order({
-    user: req.user, // data user
-    cart: cart, // data cart
-    address: req.body.address, // ambil address dari form body
-    name: req.body.name, // ambil name dari form body
-    done: false // done itu untuk cek apakah sudah bayar atau belum
-  });
-  order.save(function(err, result){
-    if(err){
-      res.redirect('/checkout');
-    }
-    req.flash('success', 'Successfully Bought Product!');
-    req.session.cart = null;
-    res.redirect('/');
+  var tanggal = new Date();
+  var weight = parseInt(cart.totalQty) * 1000; // ibarat 1 sepatu 1 kg
+  
+  shipping.getShippingCost(457, req.body.city, weight, req.body.courier, ongkir => {
+    var order = new Order({
+      user: req.user, // data user
+      cart: cart, // data cart
+      address: req.body.address, // ambil address dari form body
+      name: req.body.name, // ambil name dari form body
+      phone: req.body.phone,
+      cityId: parseInt(req.body.city),
+      done: false, // done itu untuk cek apakah sudah bayar atau belum
+      status: false, // untuk cek status udh dikirim apa belum
+      trans_date: tanggal, // untuk tanggal transaksi
+      ongkir: ongkir // untuk ongkir
+    });
+    order.save(function(err, result){
+      if(err){
+        console.log("gagal");
+        res.redirect('/checkout');
+      }
+      else{
+        req.flash('success', 'Successfully Bought Product!');
+        req.session.cart = null;
+        console.log(result.ongkir.results.costs);
+        res.render('shop/payment', {orderDetail:result, ongkir: ongkir.results});
+      }
+    });
   });
 });
 

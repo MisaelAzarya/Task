@@ -41,6 +41,7 @@ router.get('/profile/:id',function(req, res, next){
   });
 });
 
+
 //get admin page
 router.get('/admin', function(req, res, next){
   Order.find(function(err, orders){
@@ -123,6 +124,8 @@ router.post('/signin', passport.authenticate('local.signin', {
     res.redirect('/user/profile');
   }
 });
+
+
 
 module.exports = router;
 

@@ -67,7 +67,7 @@
                     <tbody>
                       <tr class="">
                         <th>Size</th>
-                        <td>{{#each size}}
+                        <td>{{#each p_size}}
                           {{this}}
                         {{/each}}</td>
                       </tr>
@@ -108,9 +108,7 @@
     <div class="span10">
       <h4 class="title">
         <span class="pull-left"><span class="text"><strong>Related</strong> Products</span></span>
-        <span class="pull-right">
-          <a class="left button" href="#myCarousel-1" data-slide="prev"></a><a class="right button" href="#myCarousel-1" data-slide="next"></a>
-        </span>
+
       </h4>
       <div id="myCarousel-1" class="carousel slide">
         <div class="carousel-inner">
@@ -125,25 +123,6 @@
                         <a href="/product-detail/{{this._id}}"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
                         <a href="/product-detail/{{this._id}}" class="title">{{this.title}}</a><br/>
                         <a href="/product-detail/{{this._id}}" class="category">{{this.description}}</a>
-                        <p class="price">Rp{{this.price}}</p>
-                      </div>
-                    </li>
-                  {{/each}}
-              {{/each}}
-            </ul>
-
-          </div>
-          <div class="item">
-            <ul class="thumbnails listing-products" style="list-style:none;">
-              {{# each products }}
-                {{!-- <div class="row"> --}}
-                  {{# each this}}
-                    <li class="span3">
-                      <div class="product-box">
-                        <span class="sale_tag"></span>
-                        <a href="product_detail.html"><img alt="" src="../../{{this.imagePath}}" style="width:200px;height:200px;"></a><br/>
-                        <a href="product_detail.html" class="title">{{this.title}}</a><br/>
-                        <a href="#" class="category">Suspendisse aliquet</a>
                         <p class="price">Rp{{this.price}}</p>
                       </div>
                     </li>

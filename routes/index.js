@@ -296,18 +296,19 @@ router.post('/pay', isLoggedIn, function(req, res, next){
       // Everything went fine
       var addPay = new Rekening({
           order_id:req.body.orderid,
-          nama_rek: req.body.desc,
-          bank: req.body.price,
-          no_rek: req.body.color,
+          nama_rek: req.body.nama_rek,
+          bank: req.body.bank,
+          no_rek: req.body.no_rek,
           imagePath:req.file.path
       });
+      //console.log(req.body.orderid+" "+req.body.nama_rek+" "+req.body.bank+" ");
       addPay.save(function(err, result){
-          if(err){
+         if(err){
               req.flash('error', 'Something Wrong When Bought Product');
               res.redirect('/pay');
             }
-            req.flash('success', 'Successfully Bought Product!');
-            res.redirect('/');
+              req.flash('success', 'Successfully Bought Product');
+              res.redirect("/");
       });
   });
 });

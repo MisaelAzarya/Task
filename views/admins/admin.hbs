@@ -80,6 +80,7 @@
                 <td><strong>Receiver Data</strong></td>
                 <td><strong>Order List</strong></td>
                 <td><strong>Order Status</strong></td>
+                <td><strong>Evidence of Payment</strong></td>
                 <td><strong>Action</strong></td>
               </thead>
               <tbody>
@@ -107,12 +108,19 @@
 
                       <td>
                         <h5>{{this.status}}</h5>
+                      </td>
+
+                      <td>
                         {{# if this.paid}}
                         {{#each this.rek}}
-                        <h5>{{this.nama_rek}}</h5>
-                        <h5>{{this.bank}}</h5>
-                        <h5>{{this.no_rek}}</h5>
-                          <img class="img-responsive rounded mx-auto d-block" style="width:100px;" src="../../{{this.imagePath}}">
+                        <a href="../../{{this.imagePath}}" target="_blank">
+                          <img class="img-responsive rounded mx-auto d-block pull-left" style="width:50px;float:left;" src="../../{{this.imagePath}}">
+                        </a>
+                        <div class="pull-right" style="width:50px;float:right;">
+                        <h6>a/n {{this.nama_rek}}</h6>
+                        <h6>Bank {{this.bank}}</h6>
+                        <h6>No rek : {{this.no_rek}}</h6>
+                      </div>
                         {{/each}}
                         {{/if}}
                       </td>

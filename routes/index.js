@@ -256,6 +256,7 @@ router.get('/checkout', isLoggedIn, function(req, res, next){
   res.render('shop/checkout', {total: cart.totalPrice});
 });
 
+
 // ketika button submit pada checkout di klik, maka akan store data ke database
 router.post('/checkout', isLoggedIn, function(req, res, next){
   if(!req.session.cart){
@@ -281,6 +282,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
     }
     //req.flash('success', 'Successfully Bought Product!');
     req.session.cart = null;
+    req.flash('success', 'Waiting For Payment');
     res.render('user/transaction',{orderId:order._id});
   });
 });

@@ -1,4 +1,5 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 var csrf = require('csurf');
 var passport = require('passport');
@@ -42,34 +43,72 @@ router.get('/profile/:id',function(req, res, next){
 });
 
 
-//get admin page
-router.get('/admin', function(req, res, next){
-  Order.find(function(err, orders){
+router.get('/checkbkt/:id',function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+  let ids=mongoose.Types.ObjectId(req.params.id);
+  Order.aggregate(  [ {
+          "$lookup": {
+              "from": "rekenings",
+              "localField": "_id",
+              "foreignField": "order_id",
+              "as": "rek"
+          }
+      },
+      {"$match":{"_id":"$ids",ids}}
+    ]
+  ).exec((err, orders)=>{
     if(err){
       return res.write('Error!');
     }
+
+    console.log(orders, req.params.id,ids);
     var cart;
     orders.forEach(function(order){
       cart = new Cart(order.cart);
       order.items = cart.generateArray();
     });
 
+    res.render('admins/checkevidence',{orders: orders});
+  });
+});
+
+//get admin page
+router.get('/admin', function(req, res, next){
+  Order.aggregate(  [ {
+          "$lookup": {
+              "from": "rekenings",
+              "localField": "_id",
+              "foreignField": "order_id",
+              "as": "rek"
+          }
+      }]
+).exec((err, orders)=>{
+    if(err){
+      return res.write('Error!');
+    }
+
+    console.log(orders);
+    var cart;
+    orders.forEach(function(order){
+      cart = new Cart(order.cart);
+      order.items = cart.generateArray();
+    });
+    var productChunks = [];
+    var userChunks = [];
       Product.find(function(err, docs){
-        var productChunks = [];
         var chunkSize = 3;
         for (var i = 0; i < docs.length; i+= chunkSize) {
           productChunks.push(docs.slice(i, i+ chunkSize));
         }
             User.find(function(err, docs){
-              var userChunks = [];
               var chunkSize = 3;
               for (var i = 0; i < docs.length; i+= chunkSize) {
                 userChunks.push(docs.slice(i, i+ chunkSize));
               }
-            res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks});
           });
       //res.render('user/admin',{products: productChunks,orders: orders});
     });
+    res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks});
   });
 
 });

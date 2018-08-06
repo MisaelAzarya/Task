@@ -106,7 +106,11 @@
                       </td>
 
                       <td>
-                        <h4>{{this.status}}</h4>
+                        <h5>{{this.status}}</h5>
+                        {{# if this.paid}}
+                        <a href="/user/checkbkt/{{this._id}}">Check Evidence of Payment</a>
+                          
+                        {{/if}}
                       </td>
                       <td>
                           {{# if this.paid}}

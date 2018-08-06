@@ -125,6 +125,17 @@ router.post('/signin', passport.authenticate('local.signin', {
   }
 });
 
+router.get('/verified/:id', function(req, res, next){
+  var OrderId = req.params.id;
+
+  Order.findOne({_id:OrderId}, function(err, foundProduct){
+    foundProduct.verified = true;
+
+    foundProduct.save(function(err, result){
+          res.redirect('/user/admin');
+    });
+  });
+});
 
 
 module.exports = router;

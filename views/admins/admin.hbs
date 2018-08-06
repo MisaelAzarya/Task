@@ -106,14 +106,28 @@
                       </td>
 
                       <td>
-                        <h4>{{this.name}}</h4>
+                        <h4>{{this.status}}</h4>
                       </td>
                       <td>
-                          <div class="btn-group-vertical">
-                            <input type="text" name="resi" placeholder="input resi">
-                            <a href="#" class="btn btn-info" role="button" style="margin:5px;">Input Resi</a>
-                            <a href="#" class="btn btn-danger" role="button" style="margin:5px;">Delete</a>
-                          </div>
+                          {{# if this.paid}}
+                            {{# if this.verified}}
+                                {{# if this.sent}}
+                                <div class="btn-group-vertical">
+                                  <h4>{{this.resi}}</h4>
+                                  <a href="#" class="btn btn-info" role="button" style="margin:5px;">Order Done</a>
+                                </div>
+                              {{else}}
+                              <div class="btn-group-vertical">
+                                <input type="text" name="resi" placeholder="input resi">
+                                <a href="#" class="btn btn-info" role="button" style="margin:5px;">Input Resi</a>
+                              </div>
+                              {{/if}}
+                            {{else}}
+                              <a href="/user/verified/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">Verified</a>
+                            {{/if}}
+                          {{else}}
+                              <h4>No Action</h4>
+                          {{/if}}
                       </td>
                     </tr>
                 {{/each}}

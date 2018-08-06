@@ -232,7 +232,6 @@ router.get('/remove/:id', function(req, res, next){
       res.redirect('/shopping-cart');
     });
   });
-
 });
 
 // parse data ke shopping cart
@@ -268,7 +267,13 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
     cart: cart, // data cart
     address: req.body.address, // ambil address dari form body
     name: req.body.name, // ambil name dari form body
-    done: false // done itu untuk cek apakah sudah bayar atau belum
+    status:"Waiting For Payment",
+    resi: "-",
+    done: false, // done itu untuk cek apakah sudah bayar atau belum
+    canceled:false,// cek apakah pesanan di cancel
+    paid:false,
+    verified:false,
+    sent:false
   });
   order.save(function(err, result){
     if(err){
@@ -301,6 +306,16 @@ router.post('/pay', isLoggedIn, function(req, res, next){
           no_rek: req.body.no_rek,
           imagePath:req.file.path
       });
+
+      Order.findById(req.body.orderid,function(err, foundObject){
+        foundObject.status ="Waiting for Payment Verification";
+        foundObject.paid=true;
+        foundObject.save(function(err, updatedObject){
+            if (err){
+               res.status(500).send();
+            }
+       });
+      });
       //console.log(req.body.orderid+" "+req.body.nama_rek+" "+req.body.bank+" ");
       addPay.save(function(err, result){
          if(err){
@@ -312,6 +327,8 @@ router.post('/pay', isLoggedIn, function(req, res, next){
       });
   });
 });
+
+
 
 module.exports = router;
 

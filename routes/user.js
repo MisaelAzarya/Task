@@ -43,35 +43,6 @@ router.get('/profile/:id',function(req, res, next){
 });
 
 
-router.get('/checkbkt/:id',function(req, res, next){
-  // untuk ambil data order berdasarkan user id
-  let ids=mongoose.Types.ObjectId(req.params.id);
-  Order.aggregate(  [ {
-          "$lookup": {
-              "from": "rekenings",
-              "localField": "_id",
-              "foreignField": "order_id",
-              "as": "rek"
-          }
-      },
-      {"$match":{"_id":"$ids",ids}}
-    ]
-  ).exec((err, orders)=>{
-    if(err){
-      return res.write('Error!');
-    }
-
-    console.log(orders, req.params.id,ids);
-    var cart;
-    orders.forEach(function(order){
-      cart = new Cart(order.cart);
-      order.items = cart.generateArray();
-    });
-
-    res.render('admins/checkevidence',{orders: orders});
-  });
-});
-
 //get admin page
 router.get('/admin', function(req, res, next){
   Order.aggregate(  [ {

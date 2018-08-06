@@ -108,8 +108,12 @@
                       <td>
                         <h5>{{this.status}}</h5>
                         {{# if this.paid}}
-                        <a href="/user/checkbkt/{{this._id}}">Check Evidence of Payment</a>
-                          
+                        {{#each this.rek}}
+                        <h5>{{this.nama_rek}}</h5>
+                        <h5>{{this.bank}}</h5>
+                        <h5>{{this.no_rek}}</h5>
+                          <img class="img-responsive rounded mx-auto d-block" style="width:100px;" src="../../{{this.imagePath}}">
+                        {{/each}}
                         {{/if}}
                       </td>
                       <td>

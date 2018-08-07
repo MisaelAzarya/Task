@@ -287,6 +287,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
   });
 });
 
+
 router.post('/paynow', isLoggedIn, function(req, res, next){
     var orderId=req.body.orderid;
 

@@ -52,6 +52,8 @@ router.get('/admin', function(req, res, next){
               "foreignField": "order_id",
               "as": "rek"
           }
+      },{
+        "$match":{"$and":[{"canceled":false},{"done":false}]}
       }]
 ).exec((err, orders)=>{
     if(err){

@@ -21,6 +21,32 @@ router.get('/verified/:id', function(req, res, next){
   });
 });
 
+router.get('/canceled/:id', function(req, res, next){
+  var OrderId = req.params.id;
+
+  Order.findOne({_id:OrderId}, function(err, foundProduct){
+    foundProduct.status="Canceled";
+    foundProduct.canceled = true;
+
+    foundProduct.save(function(err, result){
+          res.redirect('/user/admin');
+    });
+  });
+});
+
+router.get('/done/:id', function(req, res, next){
+  var OrderId = req.params.id;
+
+  Order.findOne({_id:OrderId}, function(err, foundProduct){
+    foundProduct.status="Done";
+    foundProduct.done = true;
+
+    foundProduct.save(function(err, result){
+          res.redirect('/user/admin');
+    });
+  });
+});
+
 
 router.post('/inputresi', function(req, res, next){
   var OrderId = req.body.order_id;

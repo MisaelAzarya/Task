@@ -5,11 +5,14 @@ var Cart = require('../models/cart');
 var Product = require('../models/products');
 var Order = require('../models/order');
 var User = require('../models/user');
+var Ongkos = require('../models/ongkos');
 
 var shipping = require('shipping-indonesia');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
 var hbs = require('hbs');
 hbs.registerHelper('equal', require('handlebars-helper-equal'));
+
+var ObjectId = require('mongoose').Types.ObjectId;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -67,7 +70,7 @@ router.get('/add-to-cart/:id', function(req, res, next){
     cart.add(product, product.id);
     // untuk store data cart ke session
     req.session.cart = cart;
-    console.log(req.session.cart);
+    //console.log(req.session.cart);
     res.redirect('/');
   });
 });
@@ -92,7 +95,7 @@ router.get('/add-to-cart2/:id', function(req, res, next){
     cart.add(product, product.id);
     // untuk store data cart ke session
     req.session.cart = cart;
-    console.log(req.session.cart);
+    //console.log(req.session.cart);
     res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
   });
   //var messages = req.flash('error');
@@ -130,7 +133,7 @@ router.post('/product-detail', function(req, res, next){
       }
       // untuk store data cart ke session
       req.session.cart = cart;
-      console.log(req.session.cart);
+      //console.log(req.session.cart);
       res.render('shop/product-detail',{_id:updatedProduct._id,product_name:updatedProduct.title,p_brand:updatedProduct.brand, p_color:updatedProduct.color,p_stock:updatedProduct.stock, p_size:updatedProduct.size,p_gender:updatedProduct.gender, desc:updatedProduct.description, img:updatedProduct.imagePath, price:updatedProduct.price, p_ready:updatedProduct.ready, products:productChunks});
     });
   });
@@ -233,36 +236,70 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
   if(!req.session.cart){
     return res.redirect('/shopping-cart');
   }
-  var cart = new Cart(req.session.cart);
-  var tanggal = new Date();
-  var weight = parseInt(cart.totalQty) * 1000; // ibarat 1 sepatu 1 kg
-  
-  shipping.getShippingCost(457, req.body.city, weight, req.body.courier, ongkir => {
-    var order = new Order({
-      user: req.user, // data user
-      cart: cart, // data cart
-      address: req.body.address, // ambil address dari form body
-      name: req.body.name, // ambil name dari form body
-      phone: req.body.phone,
-      cityId: parseInt(req.body.city),
-      done: false, // done itu untuk cek apakah sudah bayar atau belum
-      status: false, // untuk cek status udh dikirim apa belum
-      trans_date: tanggal, // untuk tanggal transaksi
-      ongkir: ongkir // untuk ongkir
+    var cart = new Cart(req.session.cart);
+    var tanggal = new Date();
+    var weight = parseInt(cart.totalQty) * 1000; // ibarat 1 sepatu 1 kg
+    
+    shipping.getShippingCost(457, req.body.city, weight, req.body.courier, ongkir => {
+      var order = new Order({
+        user: req.user, // data user
+        cart: cart, // data cart
+        address: req.body.address, // ambil address dari form body
+        name: req.body.name, // ambil name dari form body
+        phone: req.body.phone,
+        cityId: parseInt(req.body.city),
+        done: false, // done itu untuk cek apakah sudah bayar atau belum
+        status: false, // untuk cek status udh dikirim apa belum
+        trans_date: tanggal, // untuk tanggal transaksi
+        ongkir: ongkir // untuk ongkir
+      });
+      order.save(function(err, result){
+        if(err){
+          console.log("gagal");
+          res.redirect('/checkout');
+        }
+        else{
+          var orderid = String(order._id);
+          var flag = false;
+          for(i=0;i<result.ongkir.results[0].costs.length;i++){
+            if(i == result.ongkir.results[0].costs.length - 1){
+              flag = true;
+            }
+            var listongkir = new Ongkos({
+              transid: orderid,
+              tgl: tanggal,
+              service: result.ongkir.results[0].costs[i].service,
+              value: result.ongkir.results[0].costs[i].cost[0].value,
+              etd: result.ongkir.results[0].costs[i].cost[0].etd
+            });
+            listongkir.save(function(err, berhasil){
+              if(err){
+                console.log("gk nyimpen ke db");
+              }
+              else{
+                if(flag){
+                  Ongkos.find({transid: orderid}, function(err, hasil){
+                    if(err){
+                      console.log("gagals");
+                      res.redirect('/checkout');
+                    }
+                    else{
+                      i = result.ongkir.results[0].costs.length;
+                      flag = false;
+                      req.flash('success', 'Successfully Bought Product!');
+                      req.session.cart = null;
+                      console.log(hasil);
+                      //console.log(result.ongkir.results[0].costs[0].cost[0].value);
+                      res.render('shop/payment', {orderDetail:result, ongkir: hasil});
+                    }
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
     });
-    order.save(function(err, result){
-      if(err){
-        console.log("gagal");
-        res.redirect('/checkout');
-      }
-      else{
-        req.flash('success', 'Successfully Bought Product!');
-        req.session.cart = null;
-        console.log(result.ongkir.results.costs);
-        res.render('shop/payment', {orderDetail:result, ongkir: ongkir.results});
-      }
-    });
-  });
 });
 
 

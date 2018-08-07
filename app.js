@@ -54,6 +54,14 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
+  // ini untuk mengatasi error can't set headers
+  var _send =  res.send;
+  var sent = false;
+  res.send = function(data){
+    if(sent) return;
+    _send.bind(res)(data);
+    sent = true;
+  }
   res.locals.login = req.isAuthenticated();
   res.locals.session = req.session;
   next();

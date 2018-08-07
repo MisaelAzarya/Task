@@ -4,10 +4,10 @@
            <h1>Tesssssttt</h1>
             {{#each ongkir}}
                 <p>{{this.service}}</p>
-                {{#each detail}}
-                    <p>Biaya: {{this.value}}</p>
-                    <p>Estimate: {{this.etd}} days</p>
-                {{/each}}
+                <p>{{this.transid}}</p>
+                <p>Biaya: {{this.value}}</p>
+                <p>Estimate: {{this.etd}} days</p>
+                <br>
             {{/each}}
         </div>
     </div>

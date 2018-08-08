@@ -68,6 +68,15 @@
       {{/each}}
     {{!-- </div> --}}
     {{/each}}
-
   {{/if}}
+  <div class="col-md-12 col-sm-12">
+    <center>
+      <form action="/" method="POST">
+        {{#each length}}
+          <input type="hidden" value="{{this.this}}" name="pages">
+          <button type="submit" class="btn btn-info">{{this}}</button>
+        {{/each}}
+      </form>
+    </center>
+  </div>
 </div>

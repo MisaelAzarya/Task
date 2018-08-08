@@ -38,12 +38,47 @@ router.get('/', function(req, res, next) {
   var successMsg = req.flash('success')[0];
   // ambil data dari products
   Product.find(function(err, docs){
-    var productChunks = [];
-    var chunkSize = 3;
-    for (var i = 0; i < docs.length; i+= chunkSize) {
-      productChunks.push(docs.slice(i, i+ chunkSize));
+    var arr = [];
+    var length = Math.ceil(docs.length / 10);
+    for (var x=1; x<length+1; x++){
+      arr.push(x);
     }
-    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg,  f_brand: false });
+    Product.find(function(err, docss){
+      var productChunks = [];
+      var chunkSize = 3;
+      for (var i = 0; i < docss.length; i+= chunkSize) {
+        productChunks.push(docss.slice(i, i+ chunkSize));
+      }
+      res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg,  f_brand: false, length: arr});
+    }).limit(9);
+  });
+});
+
+router.post('/', function(req, res, next){
+  var successMsg = req.flash('success')[0];
+  // ini untuk pagination
+  var pages = parseInt(req.body.pages);
+  var skips = 0;
+  console.log(pages);
+  if(parseInt(pages) > 1){
+    console.log('masuk sini ?');
+    skips = parseInt((parseInt(pages)-1) * 9);
+  }
+  console.log(skips)
+  Product.find(function(err, docs){
+    var arr = [];
+    var length = Math.ceil(docs.length / 10);
+    for (var x=1; x<length+1; x++){
+      arr.push(x);
+    }
+    Product.find(function(err, docss){
+      var productChunks = [];
+      var chunkSize = 3;
+      for (var i = 0; i < docss.length; i+= chunkSize) {
+        productChunks.push(docss.slice(i, i+ chunkSize));
+      }
+      res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg,  f_brand: false, length: arr});
+    }).skip(parseInt(skips)).limit(9);
   });
 });
 
@@ -367,14 +402,18 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
 
 router.post('/paynow', isLoggedIn, function(req, res, next){
   var orderId = req.body.orderId;
-  var service = req.body.service;
   var value = req.body.value;
 
-  var cart = new Cart(req.session.cart);
-  cart.addTotal(value);
-  var total = cart.getTotal();
-  req.session.cart = null;
-  res.render('user/transaction',{orderId:orderId, total: total});
+  Order.findOne({_id: orderId}, function(err, foundObject){
+    var cart = new Cart(req.session.cart);
+    cart.addTotal(value);
+    foundObject.cart = cart;
+    foundObject.save(function(err, result){
+      var total = cart.getTotal();
+      req.session.cart = null;
+      res.render('user/transaction',{orderId:orderId, total: total});
+    });
+  });
 });
 
 router.post('/pay', isLoggedIn, function(req, res, next){

@@ -28,13 +28,13 @@
     We stand for top quality templates. Our genuine developers always optimized bootstrap commercial templates.
     <br/>Don't miss to use our cheap abd best bootstrap templates.
   </section>
-
-  {{# each products }}
+  {{#if f_brand}}
+    {{#each products}}
     {{!-- <div class="row"> --}}
-      {{# each this}}
+      {{#each this}}
       <div class="col-sm-6 col-md-4">
         <div class="product-box thumbnail img-thumbnail">
-          <img class="img-responsive rounded mx-auto d-block" src="{{this.imagePath}}">
+          <img class="img-responsive rounded mx-auto d-block" src="../../{{this.imagePath}}">
           <div class="caption">
             <a href="/product-detail/{{this._id}}"><h3>{{this.title}}</h3></a>
             <p>{{this.description}}</p>
@@ -47,5 +47,27 @@
       </div>
       {{/each}}
     {{!-- </div> --}}
-  {{/each}}
+    {{/each}}
+  {{else}}
+    {{#each products}}
+    {{!-- <div class="row"> --}}
+      {{#each this}}
+      <div class="col-sm-6 col-md-4">
+        <div class="product-box thumbnail img-thumbnail">
+          <img class="img-responsive rounded mx-auto d-block" src="{{this.imagePath}}">          
+          <div class="caption">
+            <a href="/product-detail/{{this._id}}"><h3>{{this.title}}</h3></a>
+            <p>{{this.description}}</p>
+            <div class="clearfix">
+              <div class="price pull-left">Rp{{this.price}}</div>
+              <a href="/add-to-cart/{{this._id}}" class="btn btn-info pull-right" role="button">Buy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    {{!-- </div> --}}
+    {{/each}}
+
+  {{/if}}
 </div>

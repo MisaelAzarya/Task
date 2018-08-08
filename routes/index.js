@@ -1,18 +1,37 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
 
 var Cart = require('../models/cart');
 var Product = require('../models/products');
 var Order = require('../models/order');
 var User = require('../models/user');
 var Ongkos = require('../models/ongkos');
+var Brand = require('../models/brand');
+var Rekening = require('../models/rekening');
 
 var shipping = require('shipping-indonesia');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
-var hbs = require('hbs');
-hbs.registerHelper('equal', require('handlebars-helper-equal'));
 
-var ObjectId = require('mongoose').Types.ObjectId;
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/buktitrf');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '.jpg');
+  }
+});
+
+var fileFilter = function(req, file, cb){
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+    cb(null, true);
+  }else{
+    cb(null, false);
+  }
+};
+
+var upload = multer({ storage: storage }).single('bktImage');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -24,7 +43,24 @@ router.get('/', function(req, res, next) {
     for (var i = 0; i < docs.length; i+= chunkSize) {
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
-    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
+    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg,  f_brand: false });
+  });
+});
+
+// untuk cari berdasarkan brand
+router.post('/search', function(req, res, next){
+  var keyword=req.body.search;
+  const regex = new RegExp(escapeRegex(keyword),'gi');
+  Product.find({title:regex},function(err, docs){
+    var productChunks = [];
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+    Brand.find(function(err, brands){
+      res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg, f_brand: false});
+          //res.render('shop/product-detail',{brands:brands,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
+    });
   });
 });
 
@@ -39,7 +75,7 @@ router.get('/woman', function(req, res, next) {
     for (var i = 0; i < docs.length; i+= chunkSize) {
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
-    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
+    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg, f_brand: false});
   });
 });
 
@@ -54,7 +90,23 @@ router.get('/man', function(req, res, next) {
     for (var i = 0; i < docs.length; i+= chunkSize) {
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
-    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg });
+    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg, f_brand: false});
+  });
+});
+
+// brands
+router.get('/brand/:name', function(req, res, next) {
+  var successMsg = req.flash('success')[0];
+  var brand = req.params.name;
+  var frombrand = true;
+  // ambil data dari products
+  Product.find({brand: brand}, function(err, docs){
+    var productChunks = [];
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+    res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg, f_brand: frombrand});
   });
 });
 
@@ -95,14 +147,12 @@ router.get('/add-to-cart2/:id', function(req, res, next){
     cart.add(product, product.id);
     // untuk store data cart ke session
     req.session.cart = cart;
-    //console.log(req.session.cart);
     res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
   });
-  //var messages = req.flash('error');
-  //res.render('shop/product-detail', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0})
 });
 
 router.post('/product-detail', function(req, res, next){
+  var message = req.flash('error')[0];
   var productId = req.body.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
   var productChunks = [];
@@ -112,51 +162,61 @@ router.post('/product-detail', function(req, res, next){
     for (var i = 0; i < docs.length; i+= chunkSize) {
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
-  });
-
-  Product.findOne({_id:productId}, function(err, product){
-    if(err){
-      return res.redirect('/');
-    }
-    cart.add(product, product.id);
-    for (i=1;i<req.body.qty;i++){
-      cart.addQty(productId);
-    }
-    product.stock = parseInt(product.stock) - parseInt(req.body.qty);
-    if(product.stock <= 0){
-      product.ready = false;
-      product.stock = 0;
-    }
-    product.save(function(err, updatedProduct){
+  }).limit(3);
+  
+  Brand.find(function(err, brands){
+    Product.findOne({_id:productId}, function(err, product){
       if(err){
         return res.redirect('/');
       }
-      // untuk store data cart ke session
-      req.session.cart = cart;
-      //console.log(req.session.cart);
-      res.render('shop/product-detail',{_id:updatedProduct._id,product_name:updatedProduct.title,p_brand:updatedProduct.brand, p_color:updatedProduct.color,p_stock:updatedProduct.stock, p_size:updatedProduct.size,p_gender:updatedProduct.gender, desc:updatedProduct.description, img:updatedProduct.imagePath, price:updatedProduct.price, p_ready:updatedProduct.ready, products:productChunks});
+      if(parseInt(product.stock) - parseInt(req.body.qty)>-1){
+        cart.add(product, product.id);
+        for (i=1;i<req.body.qty;i++){
+          cart.addQty(productId);
+        }
+        product.stock = parseInt(product.stock) - parseInt(req.body.qty);
+        if(product.stock <= 0){
+          product.ready = false;
+          product.stock = 0;
+        }
+        product.save(function(err, updatedProduct){
+          if(err){
+            return res.redirect('/');
+          }
+          // untuk store data cart ke session
+          req.session.cart = cart;
+          res.render('shop/product-detail',{brands:brands,_id:updatedProduct._id,product_name:updatedProduct.title,p_brand:updatedProduct.brand, p_color:updatedProduct.color,p_stock:updatedProduct.stock, p_size:updatedProduct.size,p_gender:updatedProduct.gender, desc:updatedProduct.description, img:updatedProduct.imagePath, price:updatedProduct.price, p_ready:updatedProduct.ready, products:productChunks ,message:message, noMessage: !message});
+        });
+      }
+      else {
+        req.flash('error', 'Pesanan Anda Melebihi Stock!');
+        var message = req.flash('error')[0];
+        res.render('shop/product-detail',{brands:brands,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color,p_stock:product.stock, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks, message:message,noMessage: !message});
+      }
     });
   });
 });
 
 // untuk masukkan id barang untuk view product detail
 router.get('/product-detail/:id', function(req, res, next){
+  var message = req.flash('error')[0];
   var productId = req.params.id;
   // untuk cari produk berdasarkan id nya
   var productChunks = [];
 
-  Product.find(function(err, docs){
-    var chunkSize = 3;
-    for (var i = 0; i < docs.length; i+= chunkSize) {
-      productChunks.push(docs.slice(i, i+ chunkSize));
-    }
-  });
   Product.findById(productId, function(err, product){
     if(err){
       return res.redirect('/');
     }
-    //console.log(req.session.cart);
-    res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color,p_stock:product.stock, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
+    Product.find({brand:product.brand}, function(err, docs){
+      var chunkSize = 3;
+      for (var i = 0; i < docs.length; i+= chunkSize) {
+        productChunks.push(docs.slice(i, i+ chunkSize));
+      }
+    }).limit(3);
+    Brand.find(function(err, brands){
+      res.render('shop/product-detail',{brands:brands,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color,p_stock:product.stock, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks, message:message, noMessage: !message});
+    });
   });
 });
 
@@ -248,14 +308,19 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
         name: req.body.name, // ambil name dari form body
         phone: req.body.phone,
         cityId: parseInt(req.body.city),
-        done: false, // done itu untuk cek apakah sudah bayar atau belum
-        status: false, // untuk cek status udh dikirim apa belum
         trans_date: tanggal, // untuk tanggal transaksi
-        ongkir: ongkir // untuk ongkir
+        ongkir: ongkir, // untuk ongkir
+        status:"Waiting For Payment",
+        resi: "-",
+        done: false, // done itu untuk cek apakah sudah bayar atau belum
+        canceled: false,// cek apakah pesanan di cancel
+        paid: false, // cek apakah sudah bayar atau belum
+        verified: false, // cek apakah bukti trf sudah benar atau belum
+        sent: false // untuk cek udh dikirim apa belum
       });
       order.save(function(err, result){
         if(err){
-          console.log("gagal");
+          console.log('gagal kah ?');s
           res.redirect('/checkout');
         }
         else{
@@ -286,11 +351,9 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
                     else{
                       i = result.ongkir.results[0].costs.length;
                       flag = false;
-                      req.flash('success', 'Successfully Bought Product!');
-                      req.session.cart = null;
-                      console.log(hasil);
-                      //console.log(result.ongkir.results[0].costs[0].cost[0].value);
-                      res.render('shop/payment', {orderDetail:result, ongkir: hasil});
+                      req.flash('success', 'Waiting For Payment');
+                      
+                      res.render('shop/payment', {ongkir: hasil});
                     }
                   });
                 }
@@ -300,6 +363,54 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
         }
       });
     });
+});
+
+router.post('/paynow', isLoggedIn, function(req, res, next){
+  var orderId = req.body.orderId;
+  var service = req.body.service;
+  var value = req.body.value;
+
+  var cart = new Cart(req.session.cart);
+  cart.addTotal(value);
+  var total = cart.getTotal();
+  req.session.cart = null;
+  res.render('user/transaction',{orderId:orderId, total: total});
+});
+
+router.post('/pay', isLoggedIn, function(req, res, next){
+  upload(req, res, function (err) {
+    if (err){
+      req.flash('error', 'Failed to Upload Image!');
+      res.redirect('/pay');
+    }
+    // Everything went fine
+    var addPay = new Rekening({
+      order_id:req.body.orderid,
+      nama_rek: req.body.nama_rek,
+      bank: req.body.bank,
+      no_rek: req.body.no_rek,
+      imagePath:req.file.path
+    });
+
+    Order.findById(req.body.orderid,function(err, foundObject){
+      foundObject.status ="Waiting for Payment Verification";
+      foundObject.paid=true;
+      foundObject.save(function(err, updatedObject){
+        if (err){
+          res.status(500).send();
+        }
+      });
+    });
+
+    addPay.save(function(err, result){
+      if(err){
+        req.flash('error', 'Something Wrong When Bought Product');
+        res.redirect('/pay');
+      }
+        req.flash('success', 'Successfully Bought Product');
+        res.redirect("/");
+    });
+  });
 });
 
 

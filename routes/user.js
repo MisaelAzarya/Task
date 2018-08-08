@@ -29,9 +29,10 @@ router.get('/profile', isLoggedIn,function(req, res, next){
   });
 });
 
-//get admin page
-router.get('/admin', function(req, res, next){
-  Order.find(function(err, orders){
+// ini untuk ketika admin ingin melihat data user
+router.get('/profile/:id', function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+  Order.find({user: req.params.id}, function(err, orders){
     if(err){
       return res.write('Error!');
     }
@@ -40,6 +41,32 @@ router.get('/admin', function(req, res, next){
       cart = new Cart(order.cart);
       order.items = cart.generateArray();
     });
+    res.render('user/profile', {orders: orders});
+  });
+});
+
+//get admin page
+router.get('/admin', function(req, res, next){
+  Order.aggregate(  [ {
+    "$lookup": {
+        "from": "rekenings",
+        "localField": "_id",
+        "foreignField": "order_id",
+        "as": "rek"
+    }
+  },{
+    "$match":{"$and":[{"canceled":false},{"done":false}]}
+  }]
+  ).exec((err, orders)=>{
+    if(err){
+      return res.write('Error!');
+    }
+    else{
+      var cart;
+      orders.forEach(function(order){
+        cart = new Cart(order.cart);
+        order.items = cart.generateArray();
+      });
 
       Product.find(function(err, docs){
         var productChunks = [];
@@ -55,7 +82,8 @@ router.get('/admin', function(req, res, next){
               }
             res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks});
           });
-    });
+      });
+    }
   });
 
 });

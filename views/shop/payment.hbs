@@ -1,13 +1,20 @@
 <div class="container" style="background-color:white;margin-top:-20px;">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
-           <h1>Tesssssttt</h1>
+           <h1>Choose your Shipping Service</h1><br>
             {{#each ongkir}}
-                <p>{{this.service}}</p>
-                <p>{{this.transid}}</p>
-                <p>Biaya: {{this.value}}</p>
-                <p>Estimate: {{this.etd}} days</p>
-                <br>
+                <div class="col-sm-12 col-md-12 clearfix">
+                    <form action="/paynow/" method="POST">
+                        <p>{{this.service}}</p>
+                        <p>Biaya: {{this.value}}</p>
+                        <p>Estimate: {{this.etd}} days</p>
+                        <br>
+                        <input type="hidden" name="service" value="{{this.service}}">
+                        <input type="hidden" name="value" value="{{this.value}}">
+                        <input type="hidden" name="orderId" value="{{this.transid}}">
+                        <button type="submit" class="btn btn-success pull-right">Select</button>
+                    </form>
+                </div>
             {{/each}}
         </div>
     </div>

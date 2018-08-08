@@ -45,6 +45,14 @@ module.exports = function Cart(oldCart){
         delete this.items[id];
     };
 
+    this.addTotal = function(ongkir){
+        this.totalPrice = parseInt(this.totalPrice) + parseInt(ongkir);
+    }
+
+    this.getTotal = function(){
+        return this.totalPrice;
+    }
+
     this.generateArray = function(){
         var arr = [];
         for(var id in this.items){

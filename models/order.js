@@ -8,10 +8,16 @@ var schema = new Schema({
     name: {type: String, required: true},
     phone: {type: String, required: true},
     cityId: {type: Number, required: true},
-    done: {type: Boolean, required: true},
-    status: {type: Boolean, required: true},
     trans_date: {type: Date, required: true},
-    ongkir: {type: Object, required: true}
+    ongkir: {type: Object, required: true},
+    status:{type: String, required: true},
+    resi:{type: String, required: true},
+    done: {type: Boolean, required: true},
+    canceled:{type: Boolean, required: true},
+    paid:{type: Boolean, required: true},
+    verified:{type: Boolean, required: true},
+    sent:{type: Boolean, required: true}
+
 });
 
 module.exports = mongoose.model('Order', schema);

@@ -6,6 +6,7 @@ var Cart = require('../models/cart');
 var Product = require('../models/products');
 var Order = require('../models/order');
 var Rekening = require('../models/rekening');
+var nodemailer = require('nodemailer');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -331,6 +332,39 @@ router.post('/pay', isLoggedIn, function(req, res, next){
   });
 });
 
+router.post('/sendemail',function(req, res){
+  var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com", // hostname
+      secure: false, // use SSL
+      port:587, // port for secure SMTP
+      auth: {
+          user: "fituremagang@gmail.com",
+          pass: "doremi123456"
+        },
+      tls: {
+          rejectUnauthorized: false
+      }
+  });
+
+    var mailOptions = {
+      from: 'fituremagang@gmail.com', // sender address
+      to: 'fituremagang@gmail.com', // list of receivers
+      subject: 'Question', // Subject line
+      text: 'Dari '+ req.body.email +": " + req.body.body //, // plaintext body
+      // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+        console.log(error);
+        res.json({yo: 'error'});
+    }else{
+        console.log('Message sent: ' + info.response);
+        res.json({yo: info.response});
+    };
+});
+  res.redirect('/contactus');
+});
 
 
 module.exports = router;

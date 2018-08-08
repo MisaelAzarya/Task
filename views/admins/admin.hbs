@@ -1,0 +1,250 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+
+  <section class="header_text">
+    <h2><span>Admin Control System</span></h2>
+  </section>
+
+<section class="main-content">
+<div class="row">
+    <div class="span11">
+      <ul class="nav nav-tabs" id="myTab">
+        <li class="active"><a data-toggle="tab" href="#products">Product List</a></li>
+        <li class=""><a data-toggle="tab" href="#transactions">Transaction List</a></li>
+        <li class=""><a data-toggle="tab" href="#users">User List</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="products">
+          <table id="data_product" class="table table-striped shop_attributes">
+            <thead>
+              <th><a href="/product/inputBarang" class="btn btn-info" role="button">Add new Item</a></th>
+              <td><strong>Brand</strong></td>
+              <td><strong>Product Detail</strong></td>
+              <td><strong>Size Color List</strong></td>
+              <td><strong>Action</strong></td>
+            </thead>
+            <tbody>
+              {{#each products }}
+                  {{#each this}}
+                  <tr class="">
+                    <th>
+                      <div class="product-box thumbnail img-thumbnail">
+                        <img class="img-responsive rounded mx-auto d-block" src="/../../{{this.imagePath}}">
+                      </div>
+                    </th>
+
+                    <td>
+                        <p><strong>{{this.brand}}</strong></p>
+                    </td>
+
+                    <td>
+                        <h4 style="color:#eb4700;">{{this.title}}</h4>
+                        <h5>Rp. {{this.price}}</h5>
+                        <p>{{this.description}}</p>
+                        <p>Stock: {{this.stock}}</p>
+                        <form method="post" action="/product/update">
+                          <input type="hidden" name="id" value="{{this._id}}">
+                          <input type="number" name="qty" style="width: 70px;">
+                          <button type="submit" class="btn-success">Add Stocks</button>
+                        </form>
+                        <br>
+                        <p>{{this.color}}</p>
+                        <p>{{this.gender}}</p>
+                    </td>
+                    <td>
+                      <h5>Size : </h5>
+                        <table>
+                        {{#each this.size}}
+                          <th>
+                            <td>{{this}}</td>
+                          </th>
+                        {{/each}}
+                      </table>
+                    </td>
+                    <td>
+                        <div class="btn-group-vertical">
+                          <a href="/product/updateBarang/{{this._id}}" class="btn btn-info" role="button">Update</a>
+                          <a href="/product/delete/{{this._id}}" class="btn btn-danger" role="button" style="margin-top:10px;">Delete</a>
+                        </div>
+                    </td>
+                  </tr>
+                  {{/each}}
+            {{/each}}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tab-pane" id="transactions">
+            <table id="data_trans" class="table table-striped shop_attributes">
+              <thead>
+                <th><strong>Id Transaction</strong></th>
+                <td><strong>Receiver Data</strong></td>
+                <td><strong>Order List</strong></td>
+                <td><strong>Order Status</strong></td>
+                <td><strong>Evidence of Payment</strong></td>
+                <td><strong>Action</strong></td>
+              </thead>
+              <tbody>
+              {{#each orders}}
+                    <tr class="">
+                      <th>
+                          <h6>{{this._id}}</h6>
+                      </th>
+
+                      <td>
+                        <h4>{{this.name}}</h4>
+                        <h5>{{this.address}}</h5>
+                      </td>
+
+                      <td>
+                        <ul class="list-group">
+                            {{#each this.items}}
+                                <li class="list-group-item">
+                                    <span class="badge">${{this.price}}</span>
+                                    {{this.item.title}} | {{this.qty}} Units
+                                </li>
+                            {{/each}}
+                        </ul>
+                      </td>
+
+                      <td>
+                        <h5>{{this.status}}</h5>
+                      </td>
+
+                      <td>
+                        {{# if this.paid}}
+                        {{#each this.rek}}
+                        <a href="../../{{this.imagePath}}" target="_blank">
+                          <img class="img-responsive rounded mx-auto d-block pull-left" style="width:50px;float:left;" src="../../{{this.imagePath}}">
+                        </a>
+                        <div class="pull-right" style="width:50px;float:right;">
+                        <h6>a/n {{this.nama_rek}}</h6>
+                        <h6>Bank {{this.bank}}</h6>
+                        <h6>No rek : {{this.no_rek}}</h6>
+                      </div>
+                        {{/each}}
+                        {{/if}}
+                      </td>
+                      <td>
+                          {{# if this.paid}}
+                            {{# if this.verified}}
+                                {{# if this.sent}}
+                                <div class="btn-group-vertical" style="margin-left:20px;">
+                                  <!--<label for="resi" class="control-label"><p class="text-info">{{this.resi}}</p><i class="icon-star"></i></label>
+                                  <a href="#" class="btn btn-info" role="button" style="margin-bottom:5px;">Order Done</a>
+                                  <a href="#" id="edit" class="btn btn-info" role="button" >Edit Resi</a>!-->
+                                  <div class="control-group">
+                                    <form action="/admins/inputresi" method="post">
+                                    <label for="resi" class="control-label">
+                                        <p class="text-info">{{this.resi}}</p>
+                                    </label>
+                                    <input type="hidden" name="order_id" value="{{this._id}}">
+                                    <input type="text" class="input-medium" style="display:none; margin-bottom:5px;" placeholder="" value="{{this.resi}}" name="resi">
+                                    <div class="controls-edit"> <a class="btn btn-warning" role="button" style="margin-bottom:5px;" href="#" onclick="edit(this);">Edit Resi</a>
+
+                                    </div>
+                                    <div class="controls-update" style="display:none;">
+                                      <!--<a class="btn btn-info" role="button" style="margin-bottom:5px;" href="#" onclick="update(this);">Update</a>!-->
+                                      <button type="submit" class="btn btn-warning" style="margin-bottom:5px;">Update Resi</button>
+                                    </div>
+                                    </form>
+                                </div>
+                                  <a href="/admins/done/{{this._id}}" class="btn btn-info" role="button" style="margin-bottom:5px;">Order Done</a>
+                                  <a href="/admins/canceled/{{this._id}}" class="btn btn-danger" role="button" style="margin-bottom:5px;">Cancel Order</a>
+
+                                  <script>
+                                  function edit(element) {
+                                      var parent = $(element).parent().parent();
+                                      var placeholder = $(parent).find('.text-info').text();
+                                      //hide label
+                                      $(parent).find('label').hide();
+                                      //show input, set placeholder
+                                      var input = $(parent).find('input[type="text"]');
+                                      var edit = $(parent).find('.controls-edit');
+                                      var update = $(parent).find('.controls-update');
+                                      $(input).show();
+                                      $(edit).hide();
+                                      $(update).show();
+                                      //$(input).attr('placeholder', placeholder);
+                                  }
+
+                                  function update(element) {
+                                      var parent = $(element).parent().parent();
+                                      var placeholder = $(parent).find('.text-info').text();
+                                      //hide label
+                                      $(parent).find('label').show();
+                                      //show input, set placeholder
+                                      var input = $(parent).find('input[type="text"]');
+                                      var edit = $(parent).find('.controls-edit');
+                                      var update = $(parent).find('.controls-update');
+                                      $(input).hide();
+                                      $(edit).show();
+                                      $(update).hide();
+                                      //$(input).attr('placeholder', placeholder);
+                                      $(parent).find('label').text($(input).val());
+                                  }
+                                  </script>
+                                </div>
+                              {{else}}
+                              <div class="btn-group-vertical" style="margin-left:20px;">
+                                <form action="/admins/inputresi" method="post">
+                                <input type="text" name="resi" placeholder="input resi" style="margin-bottom:5px;">
+                                <input type="hidden" name="order_id" value="{{this._id}}">
+                                <button type="submit" class="btn btn-primary" style="margin-bottom:5px;">Input Resi</button>
+                                <a href="/admins/canceled/{{this._id}}" class="btn btn-danger" role="button" style="margin-bottom:5px;">Cancel Order</a>
+                              </form>
+                              </div>
+                              {{/if}}
+                            {{else}}
+                              <a href="/admins/verified/{{this._id}}" class="btn btn-info" role="button" style="margin-left:20px;margin-bottom:5px;">Verificate</a>
+                              <a href="/admins/deletetrans/{{this._id}}" class="btn btn-danger" role="button" style="margin-left:20px;">Delete Transaction</a>
+                            {{/if}}
+                          {{else}}
+                          <div class="btn-group-vertical" style="margin-left:20px;">
+                              <h4>No Action</h4>
+                              <a href="/admins/deletetrans/{{this._id}}" class="btn btn-info" role="button">Delete Transaction</a>
+                          </div>
+                          {{/if}}
+                      </td>
+                    </tr>
+                {{/each}}
+              </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane" id="users">
+          <table id="data_user" class="table table-striped shop_attributes">
+            <thead>
+              <th><strong>Id User</strong></th>
+              <td><strong>Email</strong></td>
+              <td><strong>Action</strong></td>
+            </thead>
+            <tbody>
+            {{#each users}}
+              {{# each this}}
+                  <tr class="">
+                    <th>
+                        <h4>{{this._id}}</h4>
+                    </th>
+
+                    <td>
+                      <h4>{{this.email}}</h4>
+                    </td>
+
+                    <td>
+                      <div class="btn-group-vertical">
+                        <a href="/user/profile/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">See Profile</a>
+                      </div>
+                    </td>
+                  </tr>
+                  {{/each}}
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>

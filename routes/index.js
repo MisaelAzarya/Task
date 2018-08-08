@@ -346,13 +346,28 @@ router.post('/sendemail',function(req, res){
       }
   });
 
-    var mailOptions = {
+    /*var mailOptions = {
       from: 'fituremagang@gmail.com', // sender address
       to: 'fituremagang@gmail.com', // list of receivers
       subject: 'Question', // Subject line
-      text: 'Dari '+ req.body.email +": " + req.body.body //, // plaintext body
-      // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-  };
+      //text: 'Dari '+ req.body.name, //, // plaintext body
+      html: '<p>Dari : '+ req.body.name+'</p><br>Email :'+req.body.email+'<br>'+'<p>'+req.body.body+'</p>' // You can choose to send an HTML body instead
+  };*/ //untuk email di contact us
+
+  var mailOptions = {
+    from: 'fituremagang@gmail.com', // sender address
+    to: 'fituremagang@gmail.com', // list of receivers
+    subject: 'Question', // Subject line
+    //text: 'Dari '+ req.body.name, //, // plaintext body
+    html:
+    '<body>'+
+    '<div>'+
+    '<form action="#" method="post">'+
+    '<button tabindex="3" type="submit" style="background-color:#87CEEB;">Confirm</button>'+
+    '</form>'+
+    '</div>'+
+    '</body>' // You can choose to send an HTML body instead
+}; // untuk email konfirmasi email
 
   transporter.sendMail(mailOptions, function(error, info){
     if(error){

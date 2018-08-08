@@ -25,8 +25,8 @@ router.get('/canceled/:id', function(req, res, next){
   var OrderId = req.params.id;
 
   Order.findOne({_id:OrderId}, function(err, foundProduct){
-    foundProduct.status="Canceled";
-    foundProduct.done=true;
+    foundProduct.status="Canceled and Waiting For Refund";
+    foundProduct.done=false;
     foundProduct.canceled = true;
 
     foundProduct.save(function(err, result){

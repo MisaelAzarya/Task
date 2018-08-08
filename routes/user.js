@@ -69,6 +69,7 @@ router.get('/admin', function(req, res, next){
     });
     var productChunks = [];
     var userChunks = [];
+
       Product.find(function(err, docs){
         var chunkSize = 3;
         for (var i = 0; i < docs.length; i+= chunkSize) {
@@ -79,6 +80,7 @@ router.get('/admin', function(req, res, next){
               for (var i = 0; i < docs.length; i+= chunkSize) {
                 userChunks.push(docs.slice(i, i+ chunkSize));
               }
+
           });
       //res.render('user/admin',{products: productChunks,orders: orders});
     });

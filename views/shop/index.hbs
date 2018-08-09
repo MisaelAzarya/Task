@@ -1,0 +1,81 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+      <div id="success" class="alert alert-success {{#if noMessage}}hidden{{/if}}">
+        <center>{{successMsg}}</center>
+      </div>
+    </div>
+  </div>
+
+  <section  class="homepage-slider" id="home-slider">
+    <div class="flexslider">
+      <ul class="slides">
+        <li>
+          <img src="/themes/images/carousel/banner-1.jpg" alt="" />
+        </li>
+        <li>
+          <img src="/themes/images/carousel/banner-2.jpg" alt="" />
+          <div class="intro">
+            <h1>Mid season sale</h1>
+            <p><span>Up to 50% Off</span></p>
+            <p><span>On selected items online and in stores</span></p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="header_text">
+    We stand for top quality templates. Our genuine developers always optimized bootstrap commercial templates.
+    <br/>Don't miss to use our cheap abd best bootstrap templates.
+  </section>
+  {{#if f_brand}}
+    {{#each products}}
+    {{!-- <div class="row"> --}}
+      {{#each this}}
+      <div class="col-sm-6 col-md-4">
+        <div class="product-box thumbnail img-thumbnail">
+          <img class="img-responsive rounded mx-auto d-block" src="../../{{this.imagePath}}">
+          <div class="caption">
+            <a href="/product-detail/{{this._id}}"><h3>{{this.title}}</h3></a>
+            <p>{{this.description}}</p>
+            <div class="clearfix">
+              <div class="price pull-left">Rp{{this.price}}</div>
+              <a href="/add-to-cart/{{this._id}}" class="btn btn-info pull-right" role="button">Buy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    {{!-- </div> --}}
+    {{/each}}
+  {{else}}
+    {{#each products}}
+    {{!-- <div class="row"> --}}
+      {{#each this}}
+      <div class="col-sm-6 col-md-4">
+        <div class="product-box thumbnail img-thumbnail">
+          <img class="img-responsive rounded mx-auto d-block" src="{{this.imagePath}}">
+          <div class="caption">
+            <a href="/product-detail/{{this._id}}"><h3>{{this.title}}</h3></a>
+            <p>{{this.description}}</p>
+            <div class="clearfix">
+              <div class="price pull-left">Rp{{this.price}}</div>
+              <a href="/add-to-cart/{{this._id}}" class="btn btn-info pull-right" role="button">Buy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    {{!-- </div> --}}
+    {{/each}}
+  {{/if}}
+
+  <div class="col-md-12 col-sm-12">
+    <center>
+      {{#each length}}
+        <a href="/{{this}}" class="btn btn-info" role="button">{{this}}</a>
+      {{/each}}
+    </center>
+  </div>
+
+</div>

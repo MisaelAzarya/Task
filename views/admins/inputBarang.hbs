@@ -1,0 +1,93 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+    <div class="row">
+      <section class="header_text">
+              <h2>Add New Item</h2>
+      </section>
+
+        <div class="col-md-4 col-md-offset-4">
+            {{!-- kalau ada error --}}
+            <div class="alert alert-danger {{#if hasErrors}}hidden{{/if}}">
+                <center><p>{{messages}}</p></center>
+            </div>
+
+            <form action="/product/inputBarang" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="email">Nama Barang</label>
+                    <input type="text" id="namaBrg" name="namaBrg" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Brand</label>
+                    <select name="brand" id="brand" class="form-control">
+                        {{#each brands}}
+                            <option value="{{this.name}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="color">Color</label>
+                    <input type="text" name="color" id="color" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="desc">Description</label>
+                    <textarea name="desc" id="desc" cols="30" rows="5" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" name="price" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="pass">Stock</label>
+                    <input type="number" id="stock" name="stock" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label><br>
+                    <label class="radio-inline"><input type="radio" name="gender" value="Man" checked>Man</label>
+                    <label class="radio-inline"><input type="radio" name="gender" value="Woman">Woman</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="size">Size</label><br>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="35">35
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="40">40
+                    </label>
+                    <br>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="36">36
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="41">41
+                    </label>
+                    <br>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="37">37
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="42">42
+                    </label>
+                    <br>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="38">38
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="43">43
+                    </label>
+                    <br>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="39">39
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="size" value="44">44
+                    </label>
+                    <br>
+                </div>
+                <div class="form-group">
+                    <input type="file" name="productImage" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary pull-right">Add New Product</button>
+            </form>
+        </div>
+    </div>
+</div>

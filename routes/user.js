@@ -1,4 +1,5 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 var csrf = require('csurf');
 var passport = require('passport');
@@ -29,10 +30,9 @@ router.get('/profile', isLoggedIn,function(req, res, next){
   });
 });
 
-// ini untuk ketika admin ingin melihat data user
-router.get('/profile/:id', function(req, res, next){
+router.get('/profile/:id',function(req, res, next){
   // untuk ambil data order berdasarkan user id
-  Order.find({user: req.params.id}, function(err, orders){
+  Order.find({user:req.params.id}, function(err, orders){
     if(err){
       return res.write('Error!');
     }
@@ -44,6 +44,8 @@ router.get('/profile/:id', function(req, res, next){
     res.render('user/profile', {orders: orders});
   });
 });
+
+
 
 //get admin page
 router.get('/admin', function(req, res, next){
@@ -63,30 +65,32 @@ router.get('/admin', function(req, res, next){
     }
     else{
       var cart;
+      var productChunks = [];
+      var userChunks = [];
       orders.forEach(function(order){
         cart = new Cart(order.cart);
         order.items = cart.generateArray();
       });
 
       Product.find(function(err, docs){
-        var productChunks = [];
         var chunkSize = 3;
         for (var i = 0; i < docs.length; i+= chunkSize) {
           productChunks.push(docs.slice(i, i+ chunkSize));
         }
             User.find(function(err, docs){
-              var userChunks = [];
               var chunkSize = 3;
               for (var i = 0; i < docs.length; i+= chunkSize) {
                 userChunks.push(docs.slice(i, i+ chunkSize));
               }
-            res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks});
-          });
-      });
-    }
-  });
 
+          });
+      //res.render('user/admin',{products: productChunks,orders: orders});
+    });
+    res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks});
+  };
 });
+});
+
 
 router.get('/logout', isLoggedIn, function(req, res, next){
   req.logout();
@@ -140,6 +144,8 @@ router.post('/signin', passport.authenticate('local.signin', {
     res.redirect('/user/profile');
   }
 });
+
+
 
 module.exports = router;
 

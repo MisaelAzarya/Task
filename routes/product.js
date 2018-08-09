@@ -33,7 +33,39 @@ router.get('/inputBarang', function (req, res, next){
       });
 });
 
-// untuk ambil data dari form input barang
+router.get('/updateBarang/:id', function (req, res, next){
+    var messages = req.flash('error')[0];
+      Product.findById(req.params.id, function(err, product){
+            res.render('admins/updateBarang', {p_stock:product.stock,_id:product._id,product_name:product.title,p_brand:product.brand,
+              p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, messages:messages, hasErrors: !messages});
+      });
+});
+
+router.post('/updateBarang/:id', function (req, res) {
+
+      Product.findById(req.params.id,function(err, foundObject){
+            if(err){
+                req.flash('error', 'Something Wrong When Update Product');
+                res.redirect('/updateBarang');
+              }
+
+              foundObject.description=req.body.desc;
+              foundObject.price= parseInt(req.body.price);
+              foundObject.color= req.body.color;
+              //foundObject.size= req.body.size;
+              foundObject.stock= parseInt(req.body.stock);
+
+
+              foundObject.save(function(err, updatedObject){
+                  if (err){
+                     res.status(500).send();
+                  }
+                  res.redirect('/user/admin');
+             });
+        });
+
+});
+
 router.post('/inputBarang', function (req, res) {
     upload(req, res, function (err) {
         if (err){

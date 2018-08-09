@@ -1,7 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
-var csrf = require('csurf');
 var passport = require('passport');
 var Product = require('../models/products');
 var Order = require('../models/order');
@@ -13,9 +12,11 @@ router.get('/verified/:id', function(req, res, next){
 
   Order.findOne({_id:OrderId}, function(err, foundProduct){
     foundProduct.status="Waiting for Orders Sent";
+    console.log(foundProduct.verified);
     foundProduct.verified = true;
-
+    console.log(foundProduct.verified);
     foundProduct.save(function(err, result){
+      console.log(foundProduct.name);
           res.redirect('/user/admin');
     });
   });
@@ -25,7 +26,8 @@ router.get('/canceled/:id', function(req, res, next){
   var OrderId = req.params.id;
 
   Order.findOne({_id:OrderId}, function(err, foundProduct){
-    foundProduct.status="Canceled";
+    foundProduct.status="Canceled and Waiting For Refund";
+    foundProduct.done=false;
     foundProduct.canceled = true;
 
     foundProduct.save(function(err, result){

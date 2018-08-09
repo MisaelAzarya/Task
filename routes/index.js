@@ -59,14 +59,14 @@ router.get('/:page', function(req, res, next){
   // ini untuk pagination
   var pages = parseInt(req.params.page);
   var skips = 0;
-  console.log(req.params.page);
+  //console.log(req.params.page);
 //  console.log(req.params.page);
-  console.log(pages);
+  //console.log(pages);
   if(parseInt(pages) > 1){
     console.log('masuk sini ?');
     skips = parseInt((parseInt(pages)-1) * 9);
   }
-  console.log(skips)
+  //console.log(skips)
   Product.find(function(err, docs){
     var arr = [];
     var length = Math.ceil(docs.length / 10);
@@ -165,6 +165,7 @@ router.get('/add-to-cart/:id', function(req, res, next){
 });
 
 router.get('/add-to-cart2/:id', function(req, res, next){
+  var message = req.flash('error')[0];
   var productId = req.params.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
   var productChunks = [];
@@ -187,6 +188,8 @@ router.get('/add-to-cart2/:id', function(req, res, next){
     res.render('shop/product-detail',{_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
   });
 });
+
+
 
 router.post('/product-detail', function(req, res, next){
   var message = req.flash('error')[0];
@@ -257,6 +260,7 @@ router.get('/product-detail/:id', function(req, res, next){
   });
 });
 
+
 // untuk reduceByOne function
 router.get('/reduce/:id', function(req, res, next){
   var productId = req.params.id;
@@ -298,14 +302,19 @@ router.get('/remove/:id', function(req, res, next){
 
 // parse data ke shopping cart
 router.get('/shopping-cart', function(req, res, next){
+  console.log('x');
   if(!req.session.cart){
+    console.log(1);
     return res.render('shop/shopping-cart', {products: null});
   }
+  console.log(2);
+  console.log(req.session.cart);
   var cart = new Cart(req.session.cart);
   res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
 });
 
 router.get('/contactus', function(req, res, next){
+  console.log('2');
   res.render('shop/contactus');
 });
 
@@ -327,6 +336,7 @@ router.get('/checkout', isLoggedIn, function(req, res, next){
     });
   });
 });
+
 
 // ketika button submit pada checkout di klik, maka akan store data ke database
 router.post('/checkout', isLoggedIn, function(req, res, next){
@@ -455,6 +465,99 @@ router.post('/pay', isLoggedIn, function(req, res, next){
 });
 
 
+router.post('/paynow', isLoggedIn, function(req, res, next){
+    var orderId=req.body.orderid;
+
+    res.render('user/transaction',{orderId:orderId});
+});
+
+router.post('/pay', isLoggedIn, function(req, res, next){
+  upload(req, res, function (err) {
+      if (err){
+          req.flash('error', 'Failed to Upload Image!');
+          res.redirect('/pay');
+      }
+      //console.log("just "+ req.body.namaBrg);
+      // Everything went fine
+      var addPay = new Rekening({
+          order_id:req.body.orderid,
+          nama_rek: req.body.nama_rek,
+          bank: req.body.bank,
+          no_rek: req.body.no_rek,
+          imagePath:req.file.path
+      });
+
+      Order.findById(req.body.orderid,function(err, foundObject){
+        foundObject.status ="Waiting for Payment Verification";
+        foundObject.paid=true;
+        foundObject.save(function(err, updatedObject){
+            if (err){
+               res.status(500).send();
+            }
+       });
+      });
+      //console.log(req.body.orderid+" "+req.body.nama_rek+" "+req.body.bank+" ");
+      addPay.save(function(err, result){
+         if(err){
+              req.flash('error', 'Something Wrong When Bought Product');
+              res.redirect('/pay');
+            }
+              req.flash('success', 'Successfully Bought Product');
+              res.redirect("/");
+      });
+  });
+});
+
+router.post('/sendemail',function(req, res){
+  var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com", // hostname
+      secure: false, // use SSL
+      port:587, // port for secure SMTP
+      auth: {
+          user: "fituremagang@gmail.com",
+          pass: "doremi123456"
+        },
+      tls: {
+          rejectUnauthorized: false
+      }
+  });
+
+    /*var mailOptions = {
+      from: 'fituremagang@gmail.com', // sender address
+      to: 'fituremagang@gmail.com', // list of receivers
+      subject: 'Question', // Subject line
+      //text: 'Dari '+ req.body.name, //, // plaintext body
+      html: '<p>Dari : '+ req.body.name+'</p><br>Email :'+req.body.email+'<br>'+'<p>'+req.body.body+'</p>' // You can choose to send an HTML body instead
+  };*/ //untuk email di contact us
+
+  var mailOptions = {
+    from: 'fituremagang@gmail.com', // sender address
+    to: 'fituremagang@gmail.com', // list of receivers
+    subject: 'Question', // Subject line
+    //text: 'Dari '+ req.body.name, //, // plaintext body
+    html:
+    '<body>'+
+    '<div>'+
+    '<form action="#" method="post">'+
+    '<button tabindex="3" type="submit" style="background-color:#87CEEB;">Confirm</button>'+
+    '</form>'+
+    '</div>'+
+    '</body>' // You can choose to send an HTML body instead
+}; // untuk email konfirmasi email
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+        console.log(error);
+        res.json({yo: 'error'});
+    }else{
+        console.log('Message sent: ' + info.response);
+        res.json({yo: info.response});
+    };
+});
+  res.redirect('/contactus');
+});
+
+
 module.exports = router;
 
 function isLoggedIn(req, res, next){
@@ -464,3 +567,7 @@ function isLoggedIn(req, res, next){
   req.session.oldUrl = req.url;
   res.redirect('/user/signin');
 }
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};

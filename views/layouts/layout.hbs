@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel='stylesheet' href='/stylesheets/style.css' />
     <link href="/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+
     <link href="/themes/css/bootstrappage.css" rel="stylesheet"/>
 
     <!-- global styles -->
     <link href="/themes/css/flexslider.css" rel="stylesheet"/>
     <link href="/themes/css/main.css" rel="stylesheet"/>
     <link href="themes/css/jquery.fancybox.css" rel="stylesheet"/>
-
     <!-- scripts -->
     <script src="/themes/js/jquery-1.7.2.min.js"></script>
+
     <script src="/themes/js/superfish.js"></script>
     <script src="/themes/js/jquery.scrolltotop.js"></script>
     <script src="/themes/js/jquery.fancybox.js"></script>
@@ -51,11 +51,12 @@
 
     {{> footer }}
     <!-- Latest compiled JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="/themes/js/common.js"></script>
 		<script src="/themes/js/jquery.flexslider-min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript">
 			$(function() {
 				$(document).ready(function() {
@@ -108,31 +109,57 @@
         });
 			});
 		</script>
+    <script>
+			$(function () {
+				$('#orderTab a:first').tab('show');
+				$('#orderTab a').click(function (e) {
+					e.preventDefault();
+					$(this).tab('show');
+				})
+			})
+			$(document).ready(function() {
+				$('.thumbnail').fancybox({
+					openEffect  : 'none',
+					closeEffect : 'none'
+				});
+
+				$('#myCarousel-2').carousel({
+                    interval: 2500
+                });
+			});
+		</script>
     <script type="text/javascript">
       $(document).ready(function(){
-        $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
-          localStorage.setItem('activeTab', $(e.target).attr('href'));
-        });
-        var activeTab = localStorage.getItem('activeTab');
-        if(activeTab){
-          $('#myTab a[href="' + activeTab + '"]').tab('show');
-        }
+          $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+              localStorage.setItem('activeTab', $(e.target).attr('href'));
+          });
+          var activeTab = localStorage.getItem('activeTab');
+          if(activeTab){
+              $('#myTab a[href="' + activeTab + '"]').tab('show');
+          }
       });
     </script>
+
     <script type="text/javascript">
-    $(document).ready(function(){
-      $('#data_product').DataTable();
-    });
+    $(document).ready(function() {
+        $('#data_product').DataTable();
+    } );
     </script>
+
     <script type="text/javascript">
-    $(document).ready(function(){
-      $('#data_trans').DataTable();
-    });
+    $(document).ready(function() {
+        $('#data_order').DataTable();
+    } );
     </script>
+
+
     <script type="text/javascript">
-    $(document).ready(function(){
-      $('#data_user').DataTable();
-    });
+    $(document).ready(function() {
+        $('#data_user').DataTable();
+    } );
+
     </script>
+
+
   </body>
 </html>

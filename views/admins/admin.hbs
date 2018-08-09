@@ -130,9 +130,11 @@
                               <a href="#" id="edit" class="btn btn-info" role="button" >Edit Resi</a>!-->
                               <div class="control-group">
                                 <form action="/admins/inputresi" method="post">
+
                                   <label for="resi" class="control-label">
                                     <p class="text-info">{{this.resi}}</p>
-                                  </label>
+                                  </label><br>
+                                  <p class="text-info">{{this.kurir}} {{this.service}}</p>
                                   <input type="hidden" name="order_id" value="{{this._id}}">
                                   <input type="text" class="input-medium" style="display:none; margin-bottom:5px;" placeholder="" value="{{this.resi}}" name="resi">
                                   <div class="controls-edit"> <a class="btn btn-warning" role="button" style="margin-bottom:5px;" href="#" onclick="edit(this);">Edit Resi</a></div>
@@ -182,6 +184,7 @@
                             <div class="btn-group-vertical" style="margin-left:20px;">
                               <form action="/admins/inputresi" method="post">
                                 <input type="text" name="resi" placeholder="input resi" style="margin-bottom:5px;">
+                                  <p class="text-info">{{this.kurir}} {{this.service}}</p><br>
                                 <input type="hidden" name="order_id" value="{{this._id}}">
                                 <button type="submit" class="btn btn-primary" style="margin-bottom:5px;">Input Resi</button>
                                 <a href="/admins/canceled/{{this._id}}" class="btn btn-danger" role="button" style="margin-bottom:5px;">Cancel Order</a>
@@ -224,7 +227,7 @@
                     </td>
                     <td>
                       <div class="btn-group-vertical">
-                        <a href="/user/profile/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">See Profile</a>
+                        <a href="/admins/profile/{{this._id}}" class="btn btn-info" role="button" style="margin:5px;">See Profile</a>
                       </div>
                     </td>
                   </tr>

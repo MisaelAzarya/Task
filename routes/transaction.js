@@ -52,6 +52,8 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
         trans_date: tanggal, // untuk tanggal transaksi
         ongkir: ongkir, // untuk ongkir
         status:"Waiting For Payment",
+        kurir:req.body.courier,
+        service:"-",
         resi: "-",
         done: false, // done itu untuk cek apakah sudah bayar atau belum
         canceled: false,// cek apakah pesanan di cancel
@@ -67,9 +69,10 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
         else{
           var orderid = String(order._id);
           var flag = false;
-          for(i=0;i<result.ongkir.results[0].costs.length;i++){
+          for(var i=0;i<result.ongkir.results[0].costs.length;i++){
             if(i == result.ongkir.results[0].costs.length - 1){
               flag = true;
+              console.log('x');
             }
             var listongkir = new Ongkos({
               transid: orderid,
@@ -92,7 +95,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
                     else{
                       i = result.ongkir.results[0].costs.length;
                       flag = false;
-                      req.flash('success', 'Waiting For Payment');
+                      //req.flash('success', 'Waiting For Payment');
 
                       res.render('shop/payment', {ongkir: hasil});
                     }
@@ -109,11 +112,13 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
 router.post('/paynow', isLoggedIn, function(req, res, next){
   var orderId = req.body.orderId;
   var value = req.body.value;
+  var service = req.body.service;
 
   Order.findOne({_id: orderId}, function(err, foundObject){
     var cart = new Cart(req.session.cart);
     cart.addTotal(value);
     foundObject.cart = cart;
+    foundObject.service=service;
     foundObject.save(function(err, result){
       var total = cart.getTotal();
       req.session.cart = null;

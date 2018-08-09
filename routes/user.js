@@ -30,21 +30,6 @@ router.get('/profile', isLoggedIn,function(req, res, next){
   });
 });
 
-router.get('/profile/:id',function(req, res, next){
-  // untuk ambil data order berdasarkan user id
-  Order.find({user:req.params.id}, function(err, orders){
-    if(err){
-      return res.write('Error!');
-    }
-    var cart;
-    orders.forEach(function(order){
-      cart = new Cart(order.cart);
-      order.items = cart.generateArray();
-    });
-    res.render('user/profile', {orders: orders});
-  });
-});
-
 
 
 //get admin page
@@ -56,7 +41,8 @@ router.get('/admin', function(req, res, next){
         "foreignField": "order_id",
         "as": "rek"
     }
-  },{
+  },
+  {
     "$match":{"$and":[{"canceled":false},{"done":false}]}
   }]
   ).exec((err, orders)=>{
@@ -65,13 +51,14 @@ router.get('/admin', function(req, res, next){
     }
     else{
       var cart;
+      var ongkir;
       var productChunks = [];
       var userChunks = [];
       orders.forEach(function(order){
         cart = new Cart(order.cart);
         order.items = cart.generateArray();
       });
-
+      console.log(orders);
       Product.find(function(err, docs){
         var chunkSize = 3;
         for (var i = 0; i < docs.length; i+= chunkSize) {

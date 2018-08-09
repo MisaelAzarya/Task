@@ -7,6 +7,7 @@
     </div>
   </div>
 
+
   <section class="header_text">
     <h2><span>Product Details</span></h2>
   </section>
@@ -33,33 +34,25 @@
             </div>
             <div>
               {{#if p_ready}}
-                <strong>Stock:</strong> <span>{{p_stock}}</span><br>
+                <form class="form-inline" action="/product/product-detail"  method="post">
+                  <div class="span5">
+                      <input type="hidden" name="id" value="{{_id}}">
+                      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                    <input type="number" value="1" style="width:50px;height:30px; text-align:center;" name="qty">
+                  </div>
+                  <div class="span5">
+                    <br>
+                    {{!-- <a href="/add-to-cart2/{{_id}}" class="btn btn-info" role="button">Add to Cart</a> --}}
+                      <button class="btn btn-info" type="submit">Add to Cart</button>
+                  </div>
+                </form>
               {{else}}
-                <strong>Stock:</strong> <span>Out Of Stock</span><br>
-              {{/if}}
-            </address>
-            <h4><strong>Price: Rp{{price}}</strong></h4>
-          </div>
-          <div>
-            {{#if p_ready}}
-              <form class="form-inline" action="/product/product-detail"  method="post">
                 <div class="span5">
-                    <input type="hidden" name="id" value="{{_id}}">
-                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-                  <input type="number" value="1" style="width:50px;height:30px; text-align:center;" name="qty">
+                  <button class="btn btn-secondary disabled" style="color:red">Out Of Stock</button>
                 </div>
-                <div class="span5">
-                  <br>
-                    <button class="btn btn-info" type="submit">Add to Cart</button>
-                </div>
-              </form>
-            {{else}}
-              <div class="span5">
-                <button class="btn btn-secondary disabled" style="color:red">Out Of Stock</button>
-              </div>
-            {{/if}}
+                {{/if}}
+            </div>
           </div>
-        </div>
 
           <div class="row">
             <div class="span9">
@@ -88,10 +81,11 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="span2 col" style="width:150px; margin-left:20px;">
+        </div>
+
+
+    <div class="span2 col" style="width:150px;margin-left:20px;">
         <div class="block">
           <ul class="nav nav-list">
             <li class="nav-header">CATEGORIES</li>
@@ -102,11 +96,10 @@
           <ul class="nav nav-list below">
             <li class="nav-header">BRANDS</li>
             {{#each brands}}
-              <li><a href="/brand/{{this.name}}">{{this.name}}</a></li>
+              <li><a href="/viewbybrand/{{this.name}}">{{this.name}}</a></li>
             {{/each}}
           </ul>
         </div>
-      </div>
     </div>
   </div>
 
@@ -134,12 +127,14 @@
                       </div>
                     </li>
                   {{/each}}
-                {{/each}}
-              </ul>
-            </div>
+              {{/each}}
+            </ul>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </section>
 </div>
+
+<!-- src="../..{{img}}" !-->

@@ -11,6 +11,8 @@ var schema = new Schema({
     trans_date: {type: Date, required: true},
     ongkir: {type: Object, required: true},
     status:{type: String, required: true},
+    kurir:{type:String, required:true},
+    service:{type:String, required:true},
     resi:{type: String, required: true},
     done: {type: Boolean, required: true},
     canceled:{type: Boolean, required: true},

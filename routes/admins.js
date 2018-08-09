@@ -131,7 +131,20 @@ router.post('/sendemail',function(req, res){
 });
 
 
-
+router.get('/profile/:id',function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+  Order.find({user:req.params.id}, function(err, orders){
+    if(err){
+      return res.write('Error!');
+    }
+    var cart;
+    orders.forEach(function(order){
+      cart = new Cart(order.cart);
+      order.items = cart.generateArray();
+    });
+    res.render('admins/seeprofile', {orders: orders});
+  });
+});
 
 module.exports = router;
 

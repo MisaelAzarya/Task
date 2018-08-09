@@ -65,6 +65,26 @@ router.post('/:page', function(req, res, next){
   });
 });
 
+router.get('/viewbybrand/:brand', function(req, res, next) {
+  var brand=req.params.brand;
+  Product.find({brand:brand},function(err, docs){
+    if(err){
+      return res.redirect('/');
+    }
+    
+    var productChunks = [];
+    var chunkSize = 3;
+    for (var i = 0; i < docs.length; i+= chunkSize) {
+      productChunks.push(docs.slice(i, i+ chunkSize));
+    }
+    Brand.find(function(err, brands){
+      res.render('shop/viewbybrand', { title: 'Shopping Cart', products: productChunks, brands:brands});
+          //res.render('shop/product-detail',{brands:brands,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
+    });
+
+  });
+});
+
 // untuk cari berdasarkan brand
 router.post('/search', function(req, res, next){
   var keyword=req.body.search;

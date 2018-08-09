@@ -1,7 +1,7 @@
 var passport = require('passport');
 var User = require('../models/user');
 var LocalStrategy = require('passport-local').Strategy;
-
+var nodemailer = require('nodemailer');
 var shipping = require('shipping-indonesia');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
 
@@ -60,6 +60,44 @@ passport.use('local.signup', new LocalStrategy({
         if (err) {
           return done(err);
         }
+
+          var transporter = nodemailer.createTransport({
+              host: "smtp.gmail.com", // hostname
+              secure: false, // use SSL
+              port:587, // port for secure SMTP
+              auth: {
+                  user: "fituremagang@gmail.com",
+                  pass: "doremi123456"
+                },
+              tls: {
+                  rejectUnauthorized: false
+              }
+          });
+
+          var mailOptions = {
+            from: 'fituremagang@gmail.com', // sender address
+            to: email, // list of receivers
+            subject: 'Confirmation Account', // Subject line
+            //text: 'Dari '+ req.body.name, //, // plaintext body
+            html:
+            '<body>'+
+            '<div>'+
+            '<form action="#" method="post">'+
+            '<button tabindex="3" type="submit" style="background-color:light blue;">Confirmation</button>'+
+            '</form>'+
+            '</div>'+
+            '</body>' // You can choose to send an HTML body instead
+        }; // untuk email konfirmasi email
+
+          transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                console.log(error);
+                res.json({yo: 'error'});
+            }else{
+                console.log('Message sent: ' + info.response);
+                res.json({yo: info.response});
+            };
+        });
         return done(null, newUser);
       });
     });

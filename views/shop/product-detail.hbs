@@ -8,7 +8,7 @@
   </div>
 
   <section class="header_text">
-    <h2><span>Product Detailss</span></h2>
+    <h2><span>Product Details</span></h2>
   </section>
 
   <section class="main-content">
@@ -42,7 +42,7 @@
           </div>
           <div>
             {{#if p_ready}}
-              <form class="form-inline" action="/product-detail/"  method="post">
+              <form class="form-inline" action="/product/product-detail"  method="post">
                 <div class="span5">
                     <input type="hidden" name="id" value="{{_id}}">
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}">

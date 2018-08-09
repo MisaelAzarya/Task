@@ -73,7 +73,12 @@
   <div class="col-md-12 col-sm-12">
     <center>
       {{#each length}}
-        <a href="/{{this}}" class="btn btn-info" role="button">{{this}}</a>
+      <form action="/{{this}}" method="POST" style="display:inline-block;">
+
+            <input type="hidden" value="{{this.this}}" name="pages">
+            <button type="submit" class="btn btn-info">{{this}}</button>
+
+        </form>
       {{/each}}
     </center>
   </div>

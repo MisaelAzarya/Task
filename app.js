@@ -16,6 +16,7 @@ var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 var adminRouter = require('./routes/admins');
+var transRouter = require('./routes/transaction');
 
 var shipping = require('shipping-indonesia');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
@@ -69,6 +70,7 @@ app.use(function(req, res, next){
   next();
 });
 
+app.use('/trans',transRouter);
 app.use('/admins', adminRouter);
 app.use('/product', productRouter);
 app.use('/user', userRouter);

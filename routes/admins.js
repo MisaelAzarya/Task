@@ -6,6 +6,10 @@ var Product = require('../models/products');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 var User = require('../models/user');
+var nodemailer = require('nodemailer');
+var Ongkos = require('../models/ongkos');
+var shipping = require('shipping-indonesia');
+shipping.init('25134fceb7cf5271a12a2bade0c54fce');
 
 router.get('/verified/:id', function(req, res, next){
   var OrderId = req.params.id;
@@ -76,4 +80,65 @@ router.get('/deletetrans/:id', function (req, res, next){
   });
 });
 
+router.post('/sendemail',function(req, res){
+  console.log('hai');
+  var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com", // hostname
+      secure: false, // use SSL
+      port:587, // port for secure SMTP
+      auth: {
+          user: "fituremagang@gmail.com",
+          pass: "doremi123456"
+        },
+      tls: {
+          rejectUnauthorized: false
+      }
+  });
+
+    /*var mailOptions = {
+      from: 'fituremagang@gmail.com', // sender address
+      to: 'fituremagang@gmail.com', // list of receivers
+      subject: 'Question', // Subject line
+      //text: 'Dari '+ req.body.name, //, // plaintext body
+      html: '<p>Dari : '+ req.body.name+'</p><br>Email :'+req.body.email+'<br>'+'<p>'+req.body.body+'</p>' // You can choose to send an HTML body instead
+  };*/ //untuk email di contact us
+
+  var mailOptions = {
+    from: 'fituremagang@gmail.com', // sender address
+    to: 'fituremagang@gmail.com', // list of receivers
+    subject: 'Question', // Subject line
+    //text: 'Dari '+ req.body.name, //, // plaintext body
+    html:
+    '<body>'+
+    '<div>'+
+    '<form action="#" method="post">'+
+    '<button tabindex="3" type="submit" style="background-color:#87CEEB;">Confirm</button>'+
+    '</form>'+
+    '</div>'+
+    '</body>' // You can choose to send an HTML body instead
+}; // untuk email konfirmasi email
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+        console.log(error);
+        res.json({yo: 'error'});
+    }else{
+        console.log('Message sent: ' + info.response);
+        res.json({yo: info.response});
+    };
+});
+  res.redirect('/contactus');
+});
+
+
+
+
 module.exports = router;
+
+function isLoggedIn(req, res, next){
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  req.session.oldUrl = req.url;
+  res.redirect('/user/signin');
+}

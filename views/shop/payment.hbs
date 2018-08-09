@@ -4,7 +4,7 @@
            <h1>Choose your Shipping Service</h1><br>
             {{#each ongkir}}
                 <div class="col-sm-12 col-md-12 clearfix">
-                    <form action="/paynow/" method="POST">
+                    <form action="/trans/paynow" method="POST">
                         <p>{{this.service}}</p>
                         <p>Biaya: {{this.value}}</p>
                         <p>Estimate: {{this.etd}} days</p>

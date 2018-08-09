@@ -4,7 +4,7 @@
             <h1>User Profile</h1>
             <hr>
             <h2>Order List</h2>
-            <h3>History</h1>
+            <h3>History</h3>
             {{#each orders}}
                 {{#if this.done}}
                 <div class="panel panel-default">
@@ -26,7 +26,7 @@
                     </div>
                 {{/if}}
             {{/each}}
-            <h1>On Progress</h1>
+            <h3>On Progress</h3>
             {{#each orders}}
                 {{#unless this.done}}
                         <div class="panel panel-default">
@@ -43,9 +43,12 @@
                         </div>
                         <div class="panel-footer clearfix">
                           <div class="pull-left">
-                              <strong>Status : {{this.status}}</strong>
+                              <strong>Status : {{this.status}}</strong><br>
+                              {{#if this.sent}}
+                              <strong>Resi : {{this.resi}}</strong>
+                              {{/if}}
                               {{#unless this.paid}}
-                              <form action="/paynow" method="post">
+                              <form action="/trans/paynowfromprofile" method="post">
                                 <input type="hidden" name="orderid" value="{{this._id }}">
                                 <button type="submit" class="btn btn-primary">Pay Now</button>
                               </form>

@@ -14,7 +14,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="products">
-            <table class="table table-striped shop_attributes">
+            <table id="data_product" class="table table-striped shop_attributes">
               <thead>
                 <th><a href="/product/inputBarang" class="btn btn-info" role="button">Add new Item</a></th>
                 <td><strong>Brand</strong></td>
@@ -142,7 +142,7 @@
                               </div>
                               <a href="/admins/done/{{this._id}}" class="btn btn-info" role="button" style="margin-bottom:5px;">Order Done</a>
                               <a href="/admins/canceled/{{this._id}}" class="btn btn-danger" role="button" style="margin-bottom:5px;">Cancel Order</a>
-                              
+
                               <script>
                                 function edit(element) {
                                   var parent = $(element).parent().parent();
@@ -204,7 +204,7 @@
           </div>
 
           <div class="tab-pane" id="users">
-            <table class="table table-striped shop_attributes">
+            <table id="data_user" class="table table-striped shop_attributes">
               <thead>
                 <th>Id User</th>
                 <td>Email</td>

@@ -43,22 +43,24 @@ router.get('/', function(req, res, next) {
     for (var x=1; x<length+1; x++){
       arr.push(x);
     }
-    Product.find(function(err, docss){
+    Product.find(function(err, docs){
       var productChunks = [];
       var chunkSize = 3;
-      for (var i = 0; i < docss.length; i+= chunkSize) {
-        productChunks.push(docss.slice(i, i+ chunkSize));
+      for (var i = 0; i < docs.length; i+= chunkSize) {
+        productChunks.push(docs.slice(i, i+ chunkSize));
       }
       res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg,  f_brand: false, length: arr});
     }).limit(9);
   });
 });
 
-router.post('/', function(req, res, next){
+router.get('/:page', function(req, res, next){
   var successMsg = req.flash('success')[0];
   // ini untuk pagination
-  var pages = parseInt(req.body.pages);
+  var pages = parseInt(req.params.page);
   var skips = 0;
+  console.log(req.params.page);
+//  console.log(req.params.page);
   console.log(pages);
   if(parseInt(pages) > 1){
     console.log('masuk sini ?');
@@ -198,7 +200,7 @@ router.post('/product-detail', function(req, res, next){
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
   }).limit(3);
-  
+
   Brand.find(function(err, brands){
     Product.findOne({_id:productId}, function(err, product){
       if(err){
@@ -265,7 +267,7 @@ router.get('/reduce/:id', function(req, res, next){
       foundProduct.ready = true;
     }
     foundProduct.stock = parseInt(foundProduct.stock) + 1;
-    
+
     foundProduct.save(function(err, result){
       cart.reduceByOne(productId);
       req.session.cart = cart;
@@ -284,14 +286,14 @@ router.get('/remove/:id', function(req, res, next){
       foundProduct.ready = true;
     }
     foundProduct.stock = parseInt(foundProduct.stock) + parseInt(cart.getQty(productId));
-    
+
     foundProduct.save(function(err, result){
       cart.removeItem(productId);
       req.session.cart = cart;
       res.redirect('/shopping-cart');
     });
   });
- 
+
 });
 
 // parse data ke shopping cart
@@ -312,7 +314,7 @@ router.get('/checkout', isLoggedIn, function(req, res, next){
   if(!req.session.cart){
     return res.redirect('/shopping-cart');
   }
-  
+
   var cart = new Cart(req.session.cart);
   User.findOne({_id: req.user._id}, function(err, foundUser){
     var fullName = foundUser.firstName + " " + foundUser.lastName;
@@ -334,7 +336,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
     var cart = new Cart(req.session.cart);
     var tanggal = new Date();
     var weight = parseInt(cart.totalQty) * 1000; // ibarat 1 sepatu 1 kg
-    
+
     shipping.getShippingCost(457, req.body.city, weight, req.body.courier, ongkir => {
       var order = new Order({
         user: req.user, // data user
@@ -387,7 +389,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
                       i = result.ongkir.results[0].costs.length;
                       flag = false;
                       req.flash('success', 'Waiting For Payment');
-                      
+
                       res.render('shop/payment', {ongkir: hasil});
                     }
                   });

@@ -54,7 +54,7 @@
       {{#each this}}
       <div class="col-sm-6 col-md-4">
         <div class="product-box thumbnail img-thumbnail">
-          <img class="img-responsive rounded mx-auto d-block" src="{{this.imagePath}}">          
+          <img class="img-responsive rounded mx-auto d-block" src="{{this.imagePath}}">
           <div class="caption">
             <a href="/product-detail/{{this._id}}"><h3>{{this.title}}</h3></a>
             <p>{{this.description}}</p>
@@ -69,14 +69,13 @@
     {{!-- </div> --}}
     {{/each}}
   {{/if}}
+
   <div class="col-md-12 col-sm-12">
     <center>
-      <form action="/" method="POST">
-        {{#each length}}
-          <input type="hidden" value="{{this.this}}" name="pages">
-          <button type="submit" class="btn btn-info">{{this}}</button>
-        {{/each}}
-      </form>
+      {{#each length}}
+        <a href="/{{this}}" class="btn btn-info" role="button">{{this}}</a>
+      {{/each}}
     </center>
   </div>
+
 </div>

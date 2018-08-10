@@ -10,7 +10,7 @@ var nodemailer = require('nodemailer');
 var Ongkos = require('../models/ongkos');
 var Banner = require('../models/banner');
 var multer = require('multer');
-
+var sizeOf = require('image-size');
 var shipping = require('shipping-indonesia');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
 
@@ -176,25 +176,40 @@ var upload = multer({ storage: storage }).single('banner');
 router.post('/inputbanner', function(req, res, next){
   upload(req, res, function (err) {
     if (err){
+      console.log('A');
       req.flash('error', 'Failed to Upload Image!');
       res.redirect('/inputbanner');
     }
+
     // Everything went fine
     var addBanner = new Banner({
       imagePath:req.file.path,
       title:req.body.title,
-      slogan:req.body.slogan,
       description:req.body.desc,
-      start_date:req.body.start,
-      end_date:req.body.end
+      slogan:req.body.slogan
     });
 
     addBanner.save(function(err, result){
       if(err){
+        console.log('B');
         //req.flash('error', 'Something Wrong When Bought Product');
         res.redirect('/inputbanner');
       }
-        req.flash('success', 'Successfully Input New Banner');
+      var dimensions = sizeOf(addBanner.imagePath);
+      if(dimensions.width!=960 && dimensions.height!=330){
+        Banner.findByIdAndRemove(addBanner._id,function(err, banner){
+          if(err){
+            console.log('A');
+              return res.write('Error!');
+          }
+          var fs = require('fs');
+          fs.unlink(banner.imagePath, function() {
+          });
+        });
+        //req.flash('error', 'Wrong Size');
+        //res.redirect('/admins/inputbanner');
+      }
+        //req.flash('success', 'Successfully Input New Banner');
         res.redirect("/user/admin");
     });
   });

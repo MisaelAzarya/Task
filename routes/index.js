@@ -13,7 +13,6 @@ var shipping = require('shipping-indonesia');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
 
 
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var successMsg = req.flash('success')[0];

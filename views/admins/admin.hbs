@@ -4,6 +4,12 @@
     <h2><span>Admin Control System</span></h2>
   </section>
 
+  <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+    <div id="success" class="alert alert-success {{#if noMessage}}hidden{{/if}}">
+      <center>{{successMsg}}</center>
+    </div>
+  </div>
+
 <section class="main-content">
 <div class="row">
     <div class="span11">
@@ -11,7 +17,7 @@
         <li class="active"><a data-toggle="tab" href="#products">Product List</a></li>
         <li class=""><a data-toggle="tab" href="#orders">Order List</a></li>
         <li class=""><a data-toggle="tab" href="#users">User List</a></li>
-        <li class=""><a data-toggle="tab" href="#ui">UI edit</a></li>
+        <li class=""><a data-toggle="tab" href="#ui">Banner edit</a></li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane active" id="products">
@@ -213,7 +219,7 @@
           <table id="data_user" class="table table-striped shop_attributes">
             <thead>
               <th><strong>Id User</strong></th>
-              <td><strong>Email</strong></td>
+              <td><strong>User Data</strong></td>
               <td><strong>Action</strong></td>
             </thead>
             <tbody>
@@ -221,10 +227,14 @@
               {{# each this}}
                   <tr class="">
                     <th>
-                      <h4>{{this._id}}</h4>
+                      <h6>{{this._id}}</h6>
                     </th>
                     <td>
-                      <h4>{{this.email}}</h4>
+                      <h5><strong>{{this.email}}</strong></h5>
+                      <h6>{{this.firstName}} {{this.lastName}}</h6>
+                      <h6>{{this.address}}</h6>
+                      <h6>{{this.city}}</h6>
+                      <h6>{{this.phone}}</h6>
                     </td>
                     <td>
                       <div class="btn-group-vertical">

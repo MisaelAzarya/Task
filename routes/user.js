@@ -50,6 +50,7 @@ router.get('/admin', function(req, res, next){
       return res.write('Error!');
     }
     else{
+      var successMsg = req.flash('success')[0];
       var cart;
       var ongkir;
       var productChunks = [];
@@ -59,7 +60,7 @@ router.get('/admin', function(req, res, next){
         cart = new Cart(order.cart);
         order.items = cart.generateArray();
       });
-      console.log(orders);
+      //console.log(orders);
       Product.find(function(err, docs){
         var chunkSize = 3;
         for (var i = 0; i < docs.length; i+= chunkSize) {
@@ -82,7 +83,7 @@ router.get('/admin', function(req, res, next){
         });
       //res.render('user/admin',{products: productChunks,orders: orders});
     });
-    res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks, banners:bannerChunks});
+    res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks, banners:bannerChunks,successMsg: successMsg,noMessage: !successMsg,});
   };
 });
 });

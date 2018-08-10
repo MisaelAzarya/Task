@@ -1,0 +1,63 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+    {{#if products }}
+        <div class="row">
+          <section class="header_text">
+                  <h2>Shopping Cart</h2>
+                  <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+          </section>
+            <div class="col-md-offset-1 col-sm-offset-1">
+                <ul class="list-group">
+
+                     <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Number</th>
+                            <th scope="col">Item Name</th>
+                            <th scope="col"> </th>
+                            <th scope="col">Remove</th>
+                            <th scope="col">Total Price</th>
+                        </tr>
+                        </thead>
+                    <tbody>
+                    {{#each products}}                 
+                        <tr>
+                        <td><span>{{this.qty}}</span></td>
+                        <td><strong>{{this.item.title}}</strong></td>
+                        <td><div class="product-box thumbnail img-thumbnail">
+                                <img class="img-responsive rounded mx-auto d-block" src="../../{{this.item.imagePath}}">
+                        </div></td>
+                        <td><div class="btn-group">
+                                <button class="btn btn-primary pull-right dropdown-toggle" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/reduce/{{this.item._id}}">Remove by 1</a></li>
+                                    <li><a href="/remove/{{this.item._id}}">Remove all</a></li>
+                                </ul>
+                            </div></td>
+                        <td><h6>Rp.{{this.price}}</h6></td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                    </table>
+
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+                <strong>Total: {{totalPrice}}</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+                <a href="/checkout" type="button" class="btn btn-success">Checkout</a>
+            </div>
+        </div>
+    {{else}}
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <section class="header_text">
+                    <h2>No Items in Cart</h2>
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            </section>
+        </div>
+    {{/if}}
+</div>

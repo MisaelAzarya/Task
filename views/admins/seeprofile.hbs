@@ -1,0 +1,64 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h1>User Profile</h1>
+            <hr>
+            <h2>Order List</h2>
+            <h3>History</h3>
+            {{#each orders}}
+                {{#if this.done}}
+                <div class="panel panel-default">
+                  <h5 style="padding-left:20px;"> Transaksi Tanggal : {{this.trans_date}} </h5>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            {{#each this.items}}
+                                <li class="list-group-item">
+                                    <span class="badge">${{this.price}}</span>
+                                    {{this.item.title}} | {{this.qty}} Units
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    <div class="panel-footer clearfix">
+                      <div class="pull-left">
+                          <strong>Status : {{this.status}}</strong><br>
+                      </div>
+                        <div class="pull-right">
+                            <strong>Total Price: ${{this.cart.totalPrice}}</strong>
+                        </div>
+                    </div>
+                {{/if}}
+            {{/each}}
+            <h3>On Progress</h3>
+            {{#each orders}}
+                {{#unless this.done}}
+                        <div class="panel panel-default">
+                        <h5 style="padding-left:20px;">Transaksi Tanggal : {{this.trans_date}}</h5>
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                {{#each this.items}}
+                                    <li class="list-group-item">
+                                        <span class="badge">${{this.price}}</span>
+                                        {{this.item.title}} | {{this.qty}} Units
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="panel-footer clearfix">
+                          <div class="pull-left">
+                              <strong>Status : {{this.status}}</strong><br>
+                              {{#if this.sent}}
+                              <strong>Resi : {{this.resi}}</strong>
+                              {{/if}}
+
+                          </div>
+                            <div class="pull-right">
+                                <strong>Total Price: ${{this.cart.totalPrice}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                {{/unless}}
+            {{/each}}
+        </div>
+    </div>
+</div>

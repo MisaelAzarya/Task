@@ -10,17 +10,17 @@
   <section  class="homepage-slider" id="home-slider">
     <div class="flexslider">
       <ul class="slides">
+        {{#each banners}}
+        {{#each this}}
         <li>
-          <img src="/themes/images/carousel/banner-1.jpg" alt="" />
-        </li>
-        <li>
-          <img src="/themes/images/carousel/banner-2.jpg" alt="" />
+          <img src="../../{{this.imagePath}}"/>
           <div class="intro">
-            <h1>Mid season sale</h1>
-            <p><span>Up to 50% Off</span></p>
-            <p><span>On selected items online and in stores</span></p>
-          </div>
-        </li>
+								<h1>{{this.title}}</h1>
+								<p><span>{{this.description}}</span></p>
+							</div>
+          </li>
+          {{/each}}
+          {{/each}}
       </ul>
     </div>
   </section>

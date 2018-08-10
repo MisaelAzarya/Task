@@ -144,6 +144,7 @@ router.get('/profile/:id',function(req, res, next){
     orders.forEach(function(order){
       cart = new Cart(order.cart);
       order.items = cart.generateArray();
+      //order.trans_date =order.trans_date.substring(0,10);
     });
     res.render('admins/seeprofile', {orders: orders});
   });
@@ -188,19 +189,19 @@ router.post('/inputbanner', function(req, res, next){
       description:req.body.desc,
       slogan:req.body.slogan
     });
+    console.log(x);
 
     addBanner.save(function(err, result){
       if(err){
         console.log('B');
-        //req.flash('error', 'Something Wrong When Bought Product');
-        res.redirect('/inputbanner');
+        req.flash('error', 'Something Wrong When Bought Product');
+        res.redirect("/user/admin");
       }
       var dimensions = sizeOf(addBanner.imagePath);
       if(dimensions.width!=960 && dimensions.height!=330){
         Banner.findByIdAndRemove(addBanner._id,function(err, banner){
           if(err){
             console.log('A');
-              return res.write('Error!');
           }
           var fs = require('fs');
           fs.unlink(banner.imagePath, function() {

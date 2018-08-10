@@ -25,6 +25,7 @@ router.get('/profile', isLoggedIn,function(req, res, next){
     orders.forEach(function(order){
       cart = new Cart(order.cart);
       order.items = cart.generateArray();
+      order.trans_date =order.trans_date.substring(0,10);
     });
     res.render('user/profile', {orders: orders});
   });

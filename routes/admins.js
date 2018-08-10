@@ -187,9 +187,10 @@ router.post('/inputbanner', function(req, res, next){
       imagePath:req.file.path,
       title:req.body.title,
       description:req.body.desc,
-      slogan:req.body.slogan
+      slogan:req.body.slogan,
+      showslogan:false
     });
-    console.log(x);
+
 
     addBanner.save(function(err, result){
       if(err){
@@ -225,6 +226,23 @@ router.get('/deletebanner/:id', function (req, res, next){
     fs.unlink(banner.imagePath, function() {
         res.redirect("/user/admin");
     });
+  });
+});
+
+router.get('/showornot/:id', function (req, res, next){
+  Banner.findById(req.params.id,function(err, banner){
+    if(err){
+        return res.write('Error!');
+    }
+    if(banner.showslogan==true){
+      banner.showslogan=false;
+    }
+    else {
+      banner.showslogan=true;
+    }
+
+    banner.save(function(err, result){});
+    res.redirect("/user/admin");
   });
 });
 

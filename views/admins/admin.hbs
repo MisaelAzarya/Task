@@ -270,6 +270,11 @@
                 </td>
                 <td>
                   <div class="btn-group-vertical">
+                    {{#if this.showslogan}}
+                    <a href="/admins/showornot/{{this._id}}" class="btn btn-info" role="button" style="margin-top:10px;">Not Show</a>
+                    {{else}}
+                    <a href="/admins/showornot/{{this._id}}" class="btn btn-info" role="button" style="margin-top:10px;">Show</a>
+                    {{/if}}
                     <a href="/admins/deletebanner/{{this._id}}" class="btn btn-danger" role="button" style="margin-top:10px;">Delete</a>
                   </div>
                 </td>

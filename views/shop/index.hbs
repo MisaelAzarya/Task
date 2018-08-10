@@ -14,11 +14,13 @@
         {{#each this}}
         <li>
           <img src="../../{{this.imagePath}}"/>
+          {{#if this.showslogan}}
           <div class="intro">
 								<h1>{{this.title}}</h1>
 								<p><span>{{this.description}}</span></p>
-							</div>
-          </li>
+						</div>
+          {{/if}}
+        </li>
           {{/each}}
           {{/each}}
       </ul>

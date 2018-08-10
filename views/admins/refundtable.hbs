@@ -1,0 +1,86 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+
+  <section class="header_text">
+    <h2><span>Admin Control System</span></h2>
+  </section>
+
+<section class="main-content">
+<div class="row">
+    <div class="span11">
+            <table id="data_order" class="table table-striped shop_attributes">
+              <thead>
+                <th><strong>Id Transaction</strong></th>
+                <td><strong>Receiver Data</strong></td>
+                <td><strong>Order List</strong></td>
+                <td><strong>Order Status</strong></td>
+                <td><strong>Evidence of Payment</strong></td>
+                <td><strong>Action</strong></td>
+              </thead>
+              <tbody>
+              {{#each orders}}
+                    <tr class="">
+                      <th>
+                          <h6>{{this._id}}</h6>
+                      </th>
+
+                      <td>
+                        <h4>{{this.name}}</h4>
+                        <h5>{{this.address}}</h5>
+                      </td>
+
+                      <td>
+                        <ul class="list-group">
+                            {{#each this.items}}
+                                <li class="list-group-item">
+                                    <span class="badge">${{this.price}}</span>
+                                    {{this.item.title}} | {{this.qty}} Units
+                                </li>
+                            {{/each}}
+                        </ul>
+                      </td>
+
+                      <td>
+                        <h5>{{this.status}}</h5>
+                        <h6>Rp {{this.cart.totalPrice}}</h6>
+                      </td>
+
+                      <td>
+                        {{# if this.paid}}
+                        {{#each this.rek}}
+                        <a href="../../{{this.imagePath}}" target="_blank">
+                          <img class="img-responsive rounded mx-auto d-block pull-left" style="width:50px;float:left;" src="../../{{this.imagePath}}">
+                        </a>
+                        <div class="pull-right" style="width:50px;float:right;">
+                        <h6>a/n {{this.nama_rek}}</h6>
+                        <h6>Bank {{this.bank}}</h6>
+                        <h6>No rek : {{this.no_rek}}</h6>
+                      </div>
+                        {{/each}}
+                        {{/if}}
+                      </td>
+                      <td>
+                          {{# if this.paid}}
+                            {{# if this.verified}}
+                            <form action="/admins/refund" method="post">
+                            <input type="hidden" name="orderid" value="{{this._id}}">
+                            <input type="hidden" name="total" value="{{this.cart.totalPrice}}">
+                            {{#each this.rek}}
+                            <input type="hidden" name="nama_rek" value="{{this.nama_rek}}">
+                            <input type="hidden" name="bank" value="{{this.bank}}">
+                            <input type="hidden" name="no_rek" value="{{this.no_rek}}">
+                            {{/each}}
+                            <button type="submit" class="btn btn-primary">Refund</button>
+                            <form>
+                            {{/if}}
+                          {{/if}}
+                      </td>
+                    </tr>
+                {{/each}}
+              </tbody>
+            </table>
+
+    </div>
+  </div>
+
+</div>
+</section>

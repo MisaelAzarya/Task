@@ -246,6 +246,82 @@ router.get('/showornot/:id', function (req, res, next){
   });
 });
 
+
+router.get('/refund',function(req, res, next){
+  Order.aggregate(  [ {
+    "$lookup": {
+        "from": "rekenings",
+        "localField": "_id",
+        "foreignField": "order_id",
+        "as": "rek"
+    }
+  },
+  {
+    "$match":{"$and":[{"canceled":true},{"done":false}]}
+  }]
+  ).exec((err, orders)=>{
+    if(err){
+      return res.write('Error!');
+    }
+    else{
+      var cart;
+
+      orders.forEach(function(order){
+        cart = new Cart(order.cart);
+        order.items = cart.generateArray();
+      });
+      //console.log(orders);
+    //res.render('admins/refundtable');
+    res.render('admins/refundtable',{orders: orders});
+  };
+});
+  // untuk ambil data order berdasarkan user id
+
+});
+
+var storage2 = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/refunds');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '.jpg');
+  }
+});
+
+var upload2 = multer({ storage: storage2 }).single('bktRefund');
+
+router.post('/refund', function(req, res, next){
+
+    var orderId= req.body.orderid;
+    var nama = req.body.nama_rek;
+    var bank =req.body.bank;
+    var no=req.body.no_rek;
+    var total = req.body.total;
+
+    console.log(req.body.total);
+    res.render('admins/refund',{orderId:orderId, nama:nama,bank:bank, no_rek:no,total:total});
+
+
+});
+
+router.post('/updaterefund', function(req, res, next){
+  upload2(req, res, function (err) {
+    if (err){
+      console.log('A');
+      req.flash('error', 'Failed to Upload Image!');
+      //res.redirect('/inputbanner');
+    }
+    Order.findById(req.body.orderid,function(req, result){
+      result.status="Refunded";
+      result.done=true;
+      result.save(function(err, result){
+        res.redirect('/user/admin');
+      });
+
+    });
+  });
+});
+
 module.exports = router;
 
 function isLoggedIn(req, res, next){

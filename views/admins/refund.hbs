@@ -1,0 +1,34 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+    <div class="row">
+      <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+
+        <h2>Refund</h2>
+        <p>Total Refund: Rp. {{total}}</p>
+        <form action="/admins/updaterefund" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label>Transaction Number : {{orderId}}</label>
+          </div>
+          <div class="form-group">
+            <label for="nama_rek">Name: {{nama}}</label>
+          </div>
+          <div class="form-group">
+            <label for="bank">Bank: {{bank}}</label>
+
+          </div>
+          <div class="form-group">
+            <label for="no_rek">No Rek: {{no_rek}}</label>
+
+          </div>
+          <div class="form-group">
+            <label for="no_rek">Upload Bukti Transfer:</label>
+            <input type="file" name="bktRefund" accept="image/*" required>
+          </div>
+          <div class="form-group">
+            <input type="hidden" name="orderid" value="{{orderId}}">
+            <button type="submit" class="btn btn-primary">Confirm</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+</div>

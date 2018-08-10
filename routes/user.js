@@ -8,6 +8,7 @@ var Order = require('../models/order');
 var Cart = require('../models/cart');
 var User = require('../models/user');
 var shipping = require('shipping-indonesia');
+var Banner = require('../models/banner');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
 
 var csrfProtection = csrf();
@@ -53,6 +54,7 @@ router.get('/admin', function(req, res, next){
       var ongkir;
       var productChunks = [];
       var userChunks = [];
+      var bannerChunks =[];
       orders.forEach(function(order){
         cart = new Cart(order.cart);
         order.items = cart.generateArray();
@@ -70,9 +72,17 @@ router.get('/admin', function(req, res, next){
               }
 
           });
+
+          Banner.find(function(err, docs){
+            var chunkSize = 3;
+            for (var i = 0; i < docs.length; i+= chunkSize) {
+              bannerChunks.push(docs.slice(i, i+ chunkSize));
+            }
+
+        });
       //res.render('user/admin',{products: productChunks,orders: orders});
     });
-    res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks});
+    res.render('admins/admin',{products: productChunks, orders: orders, users:userChunks, banners:bannerChunks});
   };
 });
 });

@@ -238,15 +238,34 @@
             </table>
           </div>
            <div class="tab-pane" id="ui">
+            <a href="/admins/inputbanner" class="btn btn-info" role="button">Add Banner</a>
             <table id="data_ui" class="table table-striped shop_attributes">
                <thead>
-                <th><a href="/product/inputUI" class="btn btn-info" role="button">Add Banner</a></th>
-                <td><strong>Banner description</strong></td>
+                <th><strong>Banner Title</strong></th>
+                <td><strong>Banner Description</strong></td>
                 <td><strong>Action</strong></td>
               </thead>
               <tbody>
-               
+                {{#each banners}}
+                    {{# each this}}
+                <th>
+                  <p>{{this.title}}</p><br>
+                  <p>{{this.slogan}}</p>
+                </th>
+                <td>
+                  <p>{{this.title}}</p><br>
+                  <a href="../../{{this.imagePath}}" target="_blank">
+                    <img class="img-responsive rounded mx-auto d-block pull-left" style="width:200px;float:left;" src="../../{{this.imagePath}}">
+                  </a>
+                </td>
+                <td>
+                  <div class="btn-group-vertical">
+                    <a href="/admins/deletebanner/{{this._id}}" class="btn btn-danger" role="button" style="margin-top:10px;">Delete</a>
+                  </div>
+                </td>
                 </tbody>
+                    {{/each}}
+                {{/each}}
             </table>
           </div>
         </div>

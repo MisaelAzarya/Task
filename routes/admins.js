@@ -8,6 +8,9 @@ var Cart = require('../models/cart');
 var User = require('../models/user');
 var nodemailer = require('nodemailer');
 var Ongkos = require('../models/ongkos');
+var Banner = require('../models/banner');
+var multer = require('multer');
+
 var shipping = require('shipping-indonesia');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
 
@@ -143,6 +146,69 @@ router.get('/profile/:id',function(req, res, next){
       order.items = cart.generateArray();
     });
     res.render('admins/seeprofile', {orders: orders});
+  });
+});
+
+router.get('/inputbanner',function(req, res, next){
+  // untuk ambil data order berdasarkan user id
+    res.render('admins/inputbanner');
+});
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/banner');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '.jpg');
+  }
+});
+
+var fileFilter = function(req, file, cb){
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+    cb(null, true);
+  }else{
+    cb(null, false);
+  }
+};
+
+var upload = multer({ storage: storage }).single('banner');
+
+router.post('/inputbanner', function(req, res, next){
+  upload(req, res, function (err) {
+    if (err){
+      req.flash('error', 'Failed to Upload Image!');
+      res.redirect('/inputbanner');
+    }
+    // Everything went fine
+    var addBanner = new Banner({
+      imagePath:req.file.path,
+      title:req.body.title,
+      slogan:req.body.slogan,
+      description:req.body.desc,
+      start_date:req.body.start,
+      end_date:req.body.end
+    });
+
+    addBanner.save(function(err, result){
+      if(err){
+        //req.flash('error', 'Something Wrong When Bought Product');
+        res.redirect('/inputbanner');
+      }
+        req.flash('success', 'Successfully Input New Banner');
+        res.redirect("/user/admin");
+    });
+  });
+});
+
+router.get('/deletebanner/:id', function (req, res, next){
+  Banner.findByIdAndRemove(req.params.id,function(err, banner){
+    if(err){
+        return res.write('Error!');
+    }
+    var fs = require('fs');
+    fs.unlink(banner.imagePath, function() {
+        res.redirect("/user/admin");
+    });
   });
 });
 

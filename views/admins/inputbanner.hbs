@@ -1,0 +1,43 @@
+<div class="container" style="background-color:white;margin-top:-20px;">
+    <div class="row">
+      <section class="header_text">
+              <h2>Add New banner</h2>
+      </section>
+
+        <div class="col-md-4 col-md-offset-4">
+            {{!-- kalau ada error --}}
+            <form action="/admins/inputbanner" method="post" enctype="multipart/form-data">
+              <div class="form-group">
+                  <label for="product">Title</label>
+                  <input type="text" id="title" name="title" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                  <label for="product">Slogan</label>
+                  <input type="text" id="slogan" name="slogan" class="form-control" required>
+              </div>
+
+                <div class="form-group">
+                    <label for="desc">Description</label>
+                    <textarea name="desc" id="desc" cols="30" rows="5" class="form-control"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="product">Start Date</label>
+                    <input type="date" id="start" name="start" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="product">End Date</label>
+                    <input type="date" id="end" name="end" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="product">Input Banner with size 960 X 330</label>
+                    <input type="file" name="banner" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary pull-left">Add New Banner</button>
+            </form>
+        </div>
+    </div>
+</div>

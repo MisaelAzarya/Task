@@ -6,7 +6,7 @@ var Order = require('../models/order');
 var User = require('../models/user');
 var Ongkos = require('../models/ongkos');
 var Brand = require('../models/brand');
-
+var Banner = require('../models/banner');
 var nodemailer = require('nodemailer');
 
 var shipping = require('shipping-indonesia');
@@ -71,7 +71,7 @@ router.get('/viewbybrand/:brand', function(req, res, next) {
     if(err){
       return res.redirect('/');
     }
-    
+
     var productChunks = [];
     var chunkSize = 3;
     for (var i = 0; i < docs.length; i+= chunkSize) {

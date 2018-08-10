@@ -8,7 +8,7 @@
             {{#each orders}}
                 {{#if this.done}}
                 <div class="panel panel-default">
-                  <h5 style="padding-left:20px;"> Transaksi Tanggal </h5>
+                  <h5 style="padding-left:20px;"> Transaksi Tanggal : {{this.trans_date}}</h5>
                     <div class="panel-body">
                         <ul class="list-group">
                             {{#each this.items}}
@@ -20,6 +20,9 @@
                         </ul>
                     </div>
                     <div class="panel-footer clearfix">
+                      <div class="pull-left">
+                          <strong>Status : {{this.status}}</strong><br>
+                      </div>
                         <div class="pull-right">
                             <strong>Total Price: ${{this.cart.totalPrice}}</strong>
                         </div>

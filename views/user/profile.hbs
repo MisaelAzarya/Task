@@ -22,6 +22,11 @@
                     <div class="panel-footer clearfix">
                       <div class="pull-left">
                           <strong>Status : {{this.status}}</strong><br>
+                          {{#if this.canceled}}
+                            {{#if this.done}}
+                              <a href="/trans/refund/{{this._id}}" class="btn btn-warning pull-right" role="button">Evidence of Refund</a>
+                            {{/if}}
+                          {{/if}}
                       </div>
                         <div class="pull-right">
                             <strong>Total Price: ${{this.cart.totalPrice}}</strong>
@@ -66,4 +71,5 @@
             {{/each}}
         </div>
     </div>
+</div>
 </div>

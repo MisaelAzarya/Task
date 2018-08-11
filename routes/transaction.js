@@ -6,6 +6,7 @@ var Product = require('../models/products');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 var User = require('../models/user');
+var Refund = require('../models/refund');
 var nodemailer = require('nodemailer');
 var Ongkos = require('../models/ongkos');
 var Rekening = require('../models/rekening');
@@ -166,6 +167,14 @@ router.post('/pay', isLoggedIn, function(req, res, next){
         req.flash('success', 'Successfully Bought Product');
         res.redirect("/");
     });
+  });
+});
+
+router.get('/refund/:id',function(req, res){
+  Refund.findOne({order_id:req.params.id},function(err,result){
+    console.log('x');
+    console.log(result.total);
+    res.render('user/refundevidence',{total:result.total, order_id:result.order_id,nama_rek:result.nama_rek,bank:result.bank, no_rek:result.no_rek,imagePath:result.imagePath});
   });
 });
 

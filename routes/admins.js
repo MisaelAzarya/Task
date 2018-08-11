@@ -9,6 +9,7 @@ var User = require('../models/user');
 var nodemailer = require('nodemailer');
 var Ongkos = require('../models/ongkos');
 var Banner = require('../models/banner');
+var Refund = require('../models/refund');
 var multer = require('multer');
 var sizeOf = require('image-size');
 var shipping = require('shipping-indonesia');
@@ -301,7 +302,6 @@ router.post('/refund', function(req, res, next){
     console.log(req.body.total);
     res.render('admins/refund',{orderId:orderId, nama:nama,bank:bank, no_rek:no,total:total});
 
-
 });
 
 router.post('/updaterefund', function(req, res, next){
@@ -315,10 +315,22 @@ router.post('/updaterefund', function(req, res, next){
       result.status="Refunded";
       result.done=true;
       result.save(function(err, result){
-        res.redirect('/user/admin');
       });
 
     });
+    console.log('x1');
+    var refund = new Refund({
+      order_id:req.body.orderid,
+      nama_rek:req.body.nama,
+      bank:req.body.bank,
+      no_rek:req.body.no_rek,
+      total:req.body.total,
+      imagePath: req.file.path
+    });
+    refund.save(function(err,rez){
+        console.log('x2');
+        res.redirect("/user/admin");
+      });
   });
 });
 

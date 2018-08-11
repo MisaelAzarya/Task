@@ -7,6 +7,7 @@ var Product = require('../models/products');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 var User = require('../models/user');
+var Refund = require('../models/refund');
 var shipping = require('shipping-indonesia');
 var Banner = require('../models/banner');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');

@@ -7,10 +7,10 @@
 
         <form action="/admins/updaterefund" method="post" enctype="multipart/form-data">
           <div class="form-group">
-            <label>Transaction Number : {{orderId}}</label>
+            <label>Transaction Number : {{order_id}}</label>
           </div>
           <div class="form-group">
-            <label for="nama_rek">Name: {{nama}}</label>
+            <label for="nama_rek">Name: {{nama_rek}}</label>
           </div>
           <div class="form-group">
             <label for="bank">Bank: {{bank}}</label>
@@ -21,17 +21,12 @@
 
           </div>
           <div class="form-group">
-            <label for="no_rek">Upload Bukti Transfer:</label>
-            <input type="file" name="bktRefund" accept="image/*" required>
+            <label for="no_rek">Bukti Transfer:</label><br>
+            <a href="../../{{this.imagePath}}" target="_blank">
+              <img class="img-responsive rounded mx-auto d-block pull-left" style="width:200px;float:left;" src="../../{{imagePath}}">
+            </a>
           </div>
-          <div class="form-group">
-            <input type="hidden" name="orderid" value="{{orderId}}">
-            <input type="hidden" name="nama" value="{{nama}}">
-            <input type="hidden" name="bank" value="{{bank}}">
-            <input type="hidden" name="no_rek" value="{{no_rek}}">
-            <input type="hidden" name="total" value="{{total}}">
-            <button type="submit" class="btn btn-primary">Confirm</button>
-          </div>
+
         </form>
 
       </div>

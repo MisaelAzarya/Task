@@ -87,7 +87,7 @@ router.get('/viewbybrand/:brand', function(req, res, next) {
       productChunks.push(docs.slice(i, i+ chunkSize));
     }
     Brand.find(function(err, brands){
-      res.render('shop/viewbybrand', { title: 'Shopping Cart', products: productChunks, brands:brands});
+      res.render('shop/viewbybrand', { title: 'Shopping Cart', products: productChunks, brands:brands,mybrand:brand});
           //res.render('shop/product-detail',{brands:brands,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, products:productChunks});
     });
 

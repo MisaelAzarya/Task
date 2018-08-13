@@ -38,8 +38,8 @@ router.get('/', function(req, res, next) {
         }
 
       res.render('shop/index', { title: 'Shopping Cart',banners:bannerChunks, products: productChunks, successMsg: successMsg, noMessage: !successMsg,  f_brand: false, length: arr});
-    }).limit(9);
-  });
+    });
+  }).limit(9);
 });
 });
 
@@ -69,7 +69,15 @@ router.post('/:page', function(req, res, next){
       for (var i = 0; i < docss.length; i+= chunkSize) {
         productChunks.push(docss.slice(i, i+ chunkSize));
       }
-      res.render('shop/index', { title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessage: !successMsg,  f_brand: false, length: arr});
+      Banner.find(function(err, docs){
+        var bannerChunks = [];
+        var chunkSize = 3;
+        for (var i = 0; i < docs.length; i+= chunkSize) {
+          bannerChunks.push(docs.slice(i, i+ chunkSize));
+        }
+
+      res.render('shop/index', { title: 'Shopping Cart',banners:bannerChunks, products: productChunks, successMsg: successMsg, noMessage: !successMsg,  f_brand: false, length: arr});
+      });
     }).skip(parseInt(skips)).limit(9);
   });
 });

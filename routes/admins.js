@@ -15,6 +15,7 @@ var sizeOf = require('image-size');
 var shipping = require('shipping-indonesia');
 shipping.init('25134fceb7cf5271a12a2bade0c54fce');
 
+//Verifikasi pembayaran
 router.get('/verified/:id', function(req, res, next){
   var OrderId = req.params.id;
 
@@ -30,6 +31,7 @@ router.get('/verified/:id', function(req, res, next){
   });
 });
 
+//cancel order
 router.get('/canceled/:id', function(req, res, next){
   var OrderId = req.params.id;
 
@@ -44,6 +46,7 @@ router.get('/canceled/:id', function(req, res, next){
   });
 });
 
+//mengakhiri orderan, menandakan orderan berhasil
 router.get('/done/:id', function(req, res, next){
   var OrderId = req.params.id;
 
@@ -57,7 +60,7 @@ router.get('/done/:id', function(req, res, next){
   });
 });
 
-
+//input resi pengiriman, menandakan pesanan sudah dikirim
 router.post('/inputresi', function(req, res, next){
   var OrderId = req.body.order_id;
   var resi = req.body.resi;
@@ -73,7 +76,7 @@ router.post('/inputresi', function(req, res, next){
   });
 });
 
-
+//hapus transaksi yang belum dibayar, bukti trf tidak valid
 router.get('/deletetrans/:id', function (req, res, next){
   var orderId = req.params.id;
   Order.findByIdAndRemove(orderId,function(err, order){
@@ -84,6 +87,7 @@ router.get('/deletetrans/:id', function (req, res, next){
   });
 });
 
+//get email dari contact us
 router.post('/sendemail',function(req, res){
   console.log('hai');
   var transporter = nodemailer.createTransport({
@@ -99,14 +103,6 @@ router.post('/sendemail',function(req, res){
       }
   });
 
-    /*var mailOptions = {
-      from: 'fituremagang@gmail.com', // sender address
-      to: 'fituremagang@gmail.com', // list of receivers
-      subject: 'Question', // Subject line
-      //text: 'Dari '+ req.body.name, //, // plaintext body
-      html: '<p>Dari : '+ req.body.name+'</p><br>Email :'+req.body.email+'<br>'+'<p>'+req.body.body+'</p>' // You can choose to send an HTML body instead
-  };*/ //untuk email di contact us
-
   var mailOptions = {
     from: 'fituremagang@gmail.com', // sender address
     to: 'fituremagang@gmail.com', // list of receivers
@@ -116,6 +112,7 @@ router.post('/sendemail',function(req, res){
     '<body>'+
     '<div>'+
     '<form action="#" method="post">'+
+    '<p>Dari : '+ req.body.name+'</p><br>Email :'+req.body.email+'<br>'+'<p>'+req.body.body+'</p>'+
     '<button tabindex="3" type="submit" style="background-color:#87CEEB;">Confirm</button>'+
     '</form>'+
     '</div>'+
@@ -134,7 +131,7 @@ router.post('/sendemail',function(req, res){
   res.redirect('/contactus');
 });
 
-
+//cek profile user yang dipilih
 router.get('/profile/:id',function(req, res, next){
   // untuk ambil data order berdasarkan user id
   Order.find({user:req.params.id}, function(err, orders){
@@ -151,6 +148,7 @@ router.get('/profile/:id',function(req, res, next){
   });
 });
 
+//tampilkan form banner
 router.get('/inputbanner',function(req, res, next){
   // untuk ambil data order berdasarkan user id
     res.render('admins/inputbanner');
@@ -175,6 +173,7 @@ var fileFilter = function(req, file, cb){
 
 var upload = multer({ storage: storage }).single('banner');
 
+//upload banner, lalu masukkan ke database
 router.post('/inputbanner', function(req, res, next){
   upload(req, res, function (err) {
     if (err){
@@ -209,8 +208,7 @@ router.post('/inputbanner', function(req, res, next){
           fs.unlink(banner.imagePath, function() {
           });
         });
-        //req.flash('error', 'Wrong Size');
-        //res.redirect('/admins/inputbanner');
+
       }
         //req.flash('success', 'Successfully Input New Banner');
         res.redirect("/user/admin");
@@ -218,6 +216,7 @@ router.post('/inputbanner', function(req, res, next){
   });
 });
 
+//hapus banner yang tidak ingin digunakan lagi
 router.get('/deletebanner/:id', function (req, res, next){
   Banner.findByIdAndRemove(req.params.id,function(err, banner){
     if(err){
@@ -230,6 +229,7 @@ router.get('/deletebanner/:id', function (req, res, next){
   });
 });
 
+//show slogan dari banner atau tidak
 router.get('/showornot/:id', function (req, res, next){
   Banner.findById(req.params.id,function(err, banner){
     if(err){
@@ -247,7 +247,7 @@ router.get('/showornot/:id', function (req, res, next){
   });
 });
 
-
+//masuk ke form refund
 router.get('/refund',function(req, res, next){
   Order.aggregate(  [ {
     "$lookup": {
@@ -291,6 +291,7 @@ var storage2 = multer.diskStorage({
 
 var upload2 = multer({ storage: storage2 }).single('bktRefund');
 
+//get salah satu data transaksi yang mau direfund
 router.post('/refund', function(req, res, next){
 
     var orderId= req.body.orderid;
@@ -304,6 +305,7 @@ router.post('/refund', function(req, res, next){
 
 });
 
+// upload bukti refund dan update status
 router.post('/updaterefund', function(req, res, next){
   upload2(req, res, function (err) {
     if (err){

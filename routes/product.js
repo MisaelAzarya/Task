@@ -34,6 +34,7 @@ router.get('/inputBarang', function (req, res, next){
       });
 });
 
+//buka form update
 router.get('/updateBarang/:id', function (req, res, next){
     var messages = req.flash('error')[0];
       Product.findById(req.params.id, function(err, product){
@@ -42,6 +43,7 @@ router.get('/updateBarang/:id', function (req, res, next){
       });
 });
 
+//update data barang
 router.post('/updateBarang/:id', function (req, res) {
 
       Product.findById(req.params.id,function(err, foundObject){
@@ -55,8 +57,6 @@ router.post('/updateBarang/:id', function (req, res) {
               foundObject.color= req.body.color;
               //foundObject.size= req.body.size;
               foundObject.stock= parseInt(req.body.stock);
-
-
               foundObject.save(function(err, updatedObject){
                   if (err){
                      res.status(500).send();
@@ -67,6 +67,7 @@ router.post('/updateBarang/:id', function (req, res) {
 
 });
 
+//input data barang ke database
 router.post('/inputBarang', function (req, res) {
     upload(req, res, function (err) {
         if (err){
@@ -99,12 +100,14 @@ router.post('/inputBarang', function (req, res) {
     })
 });
 
+//get data barang untuk diupdate
 router.get('/updateBarang/:id', function (req, res, next){
     var messages = req.flash('error')[0];
         Product.findById(req.params.id, function(err, product){
             res.render('admins/updateBarang', {p_stock:product.stock,_id:product._id,product_name:product.title,p_brand:product.brand, p_color:product.color, p_size:product.size,p_gender:product.gender, desc:product.description, img:product.imagePath, price:product.price, p_ready:product.ready, messages:messages, hasErrors: !messages});
         });
 });
+
 
 router.post('/updateBarang/', function (req, res) {
     var id = req.body.id;
@@ -161,6 +164,7 @@ router.post('/update', function(req, res, next){
     });
 });
 
+//get shopping cart jika langsung lebih dari 1 unit
 router.post('/product-detail', function(req, res, next){
   var message = req.flash('error')[0];
   var productId = req.body.id;

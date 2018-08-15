@@ -49,9 +49,7 @@ router.post('/:page', function(req, res, next){
   // ini untuk pagination
   var pages = parseInt(req.params.page);
   var skips = 0;
-  //console.log(req.params.page);
-//  console.log(req.params.page);
-  //console.log(pages);
+
   if(parseInt(pages) > 1){
     console.log('masuk sini ?');
     skips = parseInt((parseInt(pages)-1) * 9);
@@ -313,14 +311,13 @@ router.get('/checkout', isLoggedIn, function(req, res, next){
 
 
 
-
+//masukkan rekening, bukti trf, dan orderan segera di proses
 router.post('/pay', isLoggedIn, function(req, res, next){
   upload(req, res, function (err) {
       if (err){
           req.flash('error', 'Failed to Upload Image!');
           res.redirect('/pay');
       }
-      //console.log("just "+ req.body.namaBrg);
       // Everything went fine
       var addPay = new Rekening({
           order_id:req.body.orderid,

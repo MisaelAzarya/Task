@@ -33,7 +33,7 @@ var fileFilter = function(req, file, cb){
 };
 
 var upload = multer({ storage: storage }).single('bktImage');
-
+//get data for checkout
 router.post('/checkout', isLoggedIn, function(req, res, next){
   if(!req.session.cart){
     return res.redirect('/shopping-cart');
@@ -109,7 +109,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next){
       });
     });
 });
-
+//bayar
 router.post('/paynow', isLoggedIn, function(req, res, next){
   var orderId = req.body.orderId;
   var value = req.body.value;
@@ -128,12 +128,15 @@ router.post('/paynow', isLoggedIn, function(req, res, next){
   });
 });
 
+//bayar dari profile jika ternyata belum bayar
 router.post('/paynowfromprofile', isLoggedIn, function(req, res, next){
     var orderId=req.body.orderid;
 
     res.render('user/transaction',{orderId:orderId});
 });
 
+
+//bayar input data rekening
 router.post('/pay', isLoggedIn, function(req, res, next){
   upload(req, res, function (err) {
     if (err){
@@ -170,6 +173,7 @@ router.post('/pay', isLoggedIn, function(req, res, next){
   });
 });
 
+//buka form refund
 router.get('/refund/:id',function(req, res){
   Refund.findOne({order_id:req.params.id},function(err,result){
     console.log('x');
